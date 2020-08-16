@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,400&display=swap" rel="stylesheet">
+  <script src="popup.js"></script>
+<!--   <script src="analytics.js"></script> -->
+  <link rel="stylesheet" href="popup.css">
+  <title>KiteMain</title>
+</head>
+
+<body>
+  <header>
+    <span>
+      <img src="logo.png" alt="">
+    </span>
+    <button class="headerButton" id="openKiteBtn">Open Kite</button>
+  </header>
+  <main>
+    <section class="headerSection">
+      <div class="fundStatus">
+        <!--<span class="label">Invested</span>
+        <span class="labelData" >152512148</span> -->
+
+        <span class="labelData" id="profitParent">
+          <span id="profit">&nbsp;</span>
+          <label id="profitLabel">&nbsp;</label>
+        </span>
+        <span class="labelData">
+          <span id="invested">&nbsp;</span>
+          <label id="investedLabel">&nbsp;</label>
+        </span>
+        <span class="labelData">
+          <span id="available">&nbsp;</span>
+          <label id="availableLabel">&nbsp;</label>
+        </span>
+        <span class="labelData totalAssetContainer" >
+          <span id="totalAsset">&nbsp;</span>
+          <label id="totalAssetLabel">&nbsp;</label>
+        </span>
+      </div>
+
+    </section>
+    <section>
+      <div class="tabGroup">
+        <div class="tabHeaders">
+          <div class="tabHeader">
+            <button class="tabHeaderButton active"  data-body="investmentsTabBody">My Investments</button>
+          </div>
+          <div class="tabHeader">
+            <button class="tabHeaderButton" data-body="watchListTabBody" >Watch list</button>
+          </div>
+    <!--       <div class="tabHeader">
+            <button class="tabHeaderButton" data-body="analyticsTabBody" >Analytics</button>
+          </div> -->
+        </div>
+        <div class="tabBodyContainer">
+          <div class="tabBodyPanel">
+            <div class="tabBody tabBodyActiveActive" id="investmentsTabBody">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>#</th>
+                    <th>Buy</th>
+                    <th>Current</th>
+                    <th>Invested</th>
+                    <th>Profit</th>
+                    <th class="highlight">&nbsp;&nbsp;&nbsp;%</th>
+                    <th>Research</th>
+                  </tr>
+                </thead>
+                <tbody id="investmentsTbody">
+                  <tr>
+                    <td colspan="6">
+                      <div class="loadingContainer">
+                        <div class="lds-facebook">
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+            <div class="tabBody" id="watchListTabBody" style="display: none;">
+              <section>
+
+                <span id="log"></span>
+                <div class="horizontalChild watchListHeader" >
+                  <div class="panel">
+                    <span class="label">Sort Watch list by :</span>
+                    <button id="sortBtnLooser" class="warn">Loser</button>
+                    <button id="sortBtnGainer" class="good">Gainer</button>
+                    <div class="popup">
+                      Hello world Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam deserunt porro sit voluptatum tenetur similique, eaque neque officia possimus dolorem.
+                    </div>
+                  </div>
+                  <div class="tableController">
+                    <select id="tableFiler">
+                      <option value="TOP2GAINERS&LOSERS">Top Gainer & loser</option>
+                      <option value="TOP5GAINERS">Top 5 Gainers</option>
+                      <option value="TOP5LOSERS">Top 5 Losers</option>
+                      <option value="GAINERS">Gainers</option>
+                      <option value="LOSERS">Losers</option>
+                      <option selected value="ALL">All</option>
+                    </select>
+                  </div>
+                </div>
+          
+                <div class="tableContainer">
+          
+                  <table class="watchListTable">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Change</th>
+                        <td>Research</td>
+                      </tr>
+                    </thead>
+                    <tbody id="watchListTbody">
+                      <tr>
+                        <td colspan="3">
+                          <div class="loadingContainer">
+                            <div class="lds-facebook">
+                              <div></div>
+                              <div></div>
+                              <div></div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+          
+          
+              </section>
+            </div>
+      
+
+   <!--          <div class="tabBody" id="analyticsTabBody">
+              <div class="horizontalChild" >
+                <div class="panel">
+                  
+                </div>
+                <div class="tableController">
+                  <select id="tableFiler">
+                    <option selected value="ALL">All</option>
+                  </select>
+                </div>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>hockey</th>
+                    <th>Partial Downhill</th>
+                    <th>Probability</th>
+                  </tr>
+                </thead>
+                <tbody id="analyticsTableBody">
+                  <tr>
+                    <td colspan="4">
+                      <div class="loadingContainer">
+                        <div class="lds-facebook">
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div> -->
+          </div>
+  
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+  <footer>
+    <div>
+      <div class="imageContainer">
+        <img src="/open-source.png" alt="" srcset="">
+      </div>
+    </div>
+
+
+  </footer>
+
+</body>
+
+</html>
