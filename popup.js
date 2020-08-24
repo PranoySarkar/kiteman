@@ -4,21 +4,55 @@ let totalProfit = null;
 let totalAvailableFund = null;
 let lastSnapShotUpdate = null;
 
+let communicationSuccess = false;
+
+
 function init() {
   openKiteIfNotOpen();
-  
   setTimeout(_ => {
     sendMessage({ task: 'LATEST_UPDATE' })
-  }, 5000)
+  }, 3000)
+
+  setTimeout(_ => {
+    if (!communicationSuccess) {
+      document.querySelector('#reopenKiteRow').style.visibility = 'unset';
+    }
+  }, 6500)
+
   sendMessage({ task: 'LATEST_UPDATE' })
 
   initializeListeners();
-  //getAnalytics();
+  getAnalyticsAndUpdateTable();
 }
 
-function initializeListeners(){
+function openCleanKiteTab() {
+
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({}, tabs => {
+      let index = tabs.findIndex((tab) => { return tab.url.includes('https://kite') });
+      if (index != -1) {
+        chrome.tabs.remove(tabs[index].id, function () {
+          return setTimeout(_ => {
+            return openKiteIfNotOpen()
+              .then(resolve)
+
+          }, 200)
+
+        });
+      } else {
+        return openKiteIfNotOpen()
+          .then(resolve)
+      }
+
+    });
+  })
+
+
+}
+
+function initializeListeners() {
   document.querySelectorAll('.tabHeaderButton').forEach(btn => {
-    btn.addEventListener('click',changeTab)
+    btn.addEventListener('click', changeTab)
   })
 
   let openKiteBtn = document.querySelector('#openKiteBtn');
@@ -36,10 +70,23 @@ function initializeListeners(){
     sortInstruments('GAINER')
   });
 
+
   let tableFiler = document.querySelector('#tableFiler');
   tableFiler.addEventListener('change', (evt) => {
     updateWatchListTable(evt.target.value);
   })
+
+  let analyticsTableFiler = document.querySelector('#analyticsTableFiler');
+  analyticsTableFiler.addEventListener('change', (evt) => {
+    getAnalyticsAndUpdateTable(evt.target.value);
+  })
+
+  let closeAndReopenKiteBTn = document.querySelector('#closeAndReopenKiteBTn');
+  closeAndReopenKiteBTn.addEventListener('click', () => {
+    openCleanKiteTab().then(_ => {
+      init();
+    })
+  });
 
 }
 
@@ -56,12 +103,23 @@ function changeTab(event) {
 }
 
 function openKiteIfNotOpen() {
-  chrome.tabs.query({}, tabs => {
-    let found = tabs.some((tab) => { return tab.url.includes('https://kite') });
-    if (!found) {
-      chrome.tabs.create({ url: 'https://kite.zerodha.com/', selected: false });
-    }
-  });
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({}, tabs => {
+      let found = tabs.some((tab) => { return tab.url.includes('https://kite') });
+
+      if (!found) {
+        chrome.tabs.create({ url: 'https://kite.zerodha.com/', selected: false }, _ => {
+          setTimeout(_ => {
+            resolve();
+          }, 500)
+
+        });
+      } else {
+        resolve()
+      }
+    });
+  })
+
 }
 
 
@@ -84,23 +142,24 @@ function highlightKiteTab(force = false) {
 }
 
 function sortInstruments(by) {
-  sendMessage({task: 'SORT_INSTRUMENTS',by})
+  sendMessage({ task: 'SORT_INSTRUMENTS', by })
   highlightKiteTab(true);
 }
 
 function displayLog(log) {
-  sendMessage({task: 'DISPLAY_LOG',log})
+  sendMessage({ task: 'DISPLAY_LOG', log })
 }
 
 chrome.runtime.onMessage.addListener(msg => {
   taskDispatcher(msg)
+  communicationSuccess = true;
 });
 
 function taskDispatcher(msg) {
   switch (msg.task) {
     case 'WATCH_LIST_UPDATE':
       watchList = msg.watchList;
-     // updateDbForAnalytics()
+      updateDbForAnalytics()
       updateWatchListTable();
       break;
 
@@ -175,11 +234,11 @@ function updateInvestments(positions, holdings) {
     row.appendChild(td3);
 
     let td8 = document.createElement('td');
-    td8.innerHTML = eachInvestment.buyPrice
+    td8.innerHTML = `${Math.floor((eachInvestment.buyPrice) * 100) / 100}`
     row.appendChild(td8);
 
     let td9 = document.createElement('td');
-    td9.innerHTML = eachInvestment.currentPrice
+    td9.innerHTML = `${Math.floor((eachInvestment.currentPrice) * 100) / 100}`
     row.appendChild(td9);
 
     let totalInvested = eachInvestment.quantity * eachInvestment.buyPrice
@@ -253,8 +312,8 @@ function updateInvestments(positions, holdings) {
 }
 
 
-function generateLinks(instrumentName){
-  let links=`
+function generateLinks(instrumentName) {
+  let links = `
   <div class="researchLinksTd">
     <button class="researchLinkBtn">Links</button>
     <div class="popup">
@@ -270,26 +329,30 @@ function generateLinks(instrumentName){
   `
   return links.trim();
 }
-/* function updateDbForAnalytics() {
+function updateDbForAnalytics() {
   let currentTime = new Date().getTime()
-  let currentHour=new Date().getHours();
-  let currentDay=new Date().toString().match(/^\w+/)[0].trim().toLowerCase()
-  if(currentHour>=10 && currentHour<=14 && currentDay!='sat' && currentDay!='sun'){
+  let currentHour = new Date().getHours();
+  let currentDay = new Date().toString().match(/^\w+/)[0].trim().toLowerCase()
+  if (currentHour >= 10 && currentHour <= 14 && currentDay != 'sat' && currentDay != 'sun') {
     // do not take  reading before 10  and after 3 (huge fluctuation in market)
     Analytics.getLastUpdated()
-    .then(lastUpdated => {
-      // each reading should be 45 apart
-      if ((lastUpdated + 45 * 60 * 1000) < currentTime) {
-        for (let i = 0; i < watchList.length; i++) {
-          let eachInstrument = watchList[i];
-          saveInstrumentSnapshot(eachInstrument)
+      .then(lastUpdated => {
+        // each reading should be 45 apart
+        if ((lastUpdated + 45 * 60 * 1000) < currentTime) {
+          for (let i = 0; i < watchList.length; i++) {
+            let eachInstrument = watchList[i];
+            saveInstrumentSnapshot(eachInstrument)
+          }
+          if(watchList.length>0){
+            Analytics.cleanUp(watchList)
+          }
+        
         }
-      }
-    })
-  }else{
+      })
+  } else {
     console.log('Not taking reading, unstable market or saturday or sunday')
   }
-} */
+}
 function updateWatchListTable(condition = 'ALL') {
 
   let watchListTbody = document.querySelector('#watchListTbody')
@@ -357,6 +420,7 @@ function updateWatchListTable(condition = 'ALL') {
     row.appendChild(td3);
 
     let td2 = document.createElement('td');
+    td2.classList.add('highlight');
     td2.innerHTML = eachInstrument.displacement + ' %'
     row.appendChild(td2);
 
@@ -370,56 +434,112 @@ function updateWatchListTable(condition = 'ALL') {
   }
 }
 
-/* function getAnalytics(){
+function getAnalyticsAndUpdateTable(filter = 'all') {
 
-  Analytics.do().then(allInstruments=>{
+  Analytics.do().then(allInstruments => {
     let analyticsTableBody = document.querySelector('#analyticsTableBody')
     analyticsTableBody.innerHTML = '';
-    
-    allInstruments=allInstruments.filter((eachInstrument)=>{
-      return eachInstrument.analysis.downhill.status || eachInstrument.analysis.hockey.status
+
+    if(allInstruments.length==0){
+      
+      let row = document.createElement('tr');
+      let dataNotPresent = document.createElement('td');
+      dataNotPresent.setAttribute('colspan',5);
+      dataNotPresent.innerHTML = `Data not present`
+      row.appendChild(dataNotPresent);
+      analyticsTableBody.append(row)
+      return;
+    }
+
+    switch (filter) {
+      case 'hockey_curve':
+        allInstruments = allInstruments.filter(x => x.analysis.hockey.status)
+        break;
+      case 'up':
+        allInstruments = allInstruments.filter(x => x.analysis.upHill.status)
+        break;
+      case 'down':
+        allInstruments = allInstruments.filter(x => x.analysis.downhill.status)
+        break;
+    }
+
+    allInstruments = allInstruments.filter((eachInstrument) => {
+
+      return eachInstrument.analysis.hockey.status || eachInstrument.analysis.downhill.status || eachInstrument.analysis.upHill.status
     })
 
-    allInstruments=allInstruments.sort((a,b)=>{
-      return b.analysis.hockey.status - a.analysis.hockey.status
+
+    let onlyHockey = allInstruments.filter(x => x.analysis.hockey.status != false)
+    allInstruments = allInstruments.filter(x => x.analysis.hockey.status == false)
+
+    allInstruments = allInstruments.sort((a, b) => {
+      return (b.analysis.downhill.status.toString().length - a.analysis.downhill.status.toString().length) || (b.analysis.upHill.status.toString().length - a.analysis.upHill.status.toString().length)
     })
+
+    onlyHockey = onlyHockey.sort((b, a) => {
+      return (a.analysis.hockey.status.toString().length - b.analysis.hockey.status.toString().length)
+    })
+
+
+    allInstruments = [...onlyHockey, ...allInstruments]
+
+    if(allInstruments.length==0){
+      
+      let row = document.createElement('tr');
+      let dataNotPresent = document.createElement('td');
+      dataNotPresent.setAttribute('colspan',5);
+      dataNotPresent.innerHTML = `Not enough data point.`
+      row.appendChild(dataNotPresent);
+      analyticsTableBody.append(row)
+    }
 
     for (let i = 0; i < allInstruments.length; i++) {
       let eachInstrument = allInstruments[i];
-  
+
       let row = document.createElement('tr');
-      
+
       let td2 = document.createElement('td');
       td2.innerHTML = `<a class="deepLInk"  target="_blank" 
       href="https://kite.zerodha.com/chart/web/ciq/${eachInstrument.exchange}/${eachInstrument.name}/${eachInstrument.instrumentToken}" >
       ${eachInstrument.name}</a>`
       row.appendChild(td2);
-  
+
       let td6 = document.createElement('td');
-      td6.innerHTML = `${eachInstrument.analysis.hockey.status}`
+      td6.classList.add('text-center')
+      td6.innerHTML = `${humanReadableStatus(eachInstrument.analysis.hockey.status)}`
       row.appendChild(td6);
 
       let td5 = document.createElement('td');
-      td5.innerHTML = `${eachInstrument.analysis.downhill.status}`
+      td5.classList.add('text-center')
+      td5.innerHTML = `${humanReadableStatus(eachInstrument.analysis.downhill.status)}`
       row.appendChild(td5);
 
-      
-
-
-      let td = document.createElement('td');
-      td.innerHTML = `${eachInstrument.diff.join(' | ')}`
-      row.appendChild(td);
-
+      let upHillTd = document.createElement('td');
+      upHillTd.classList.add('text-center')
+      upHillTd.innerHTML = `${humanReadableStatus(eachInstrument.analysis.upHill.status)}`
+      row.appendChild(upHillTd);
 
 
 
-
-  
+      let linksTd = document.createElement('td');
+      let instrumentName = encodeURIComponent(eachInstrument.name);
+      linksTd.innerHTML = generateLinks(instrumentName)
+      row.appendChild(linksTd);
       analyticsTableBody.appendChild(row)
     }
   })
 
-} */
+}
+
+function humanReadableStatus(status) {
+  if (status == false) {
+    return '-';
+  }
+  if (status == true) {
+    return 'Good'
+  }
+  return status
+}
 function sendMessage(msg) {
   chrome.tabs.query({}, tabs => {
     tabs.forEach(tab => {

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,400&display=swap" rel="stylesheet">
   <script src="popup.js"></script>
-<!--   <script src="analytics.js"></script> -->
+ <script src="analytics.js"></script> 
   <link rel="stylesheet" href="popup.css">
   <title>KiteMain</title>
 </head>
@@ -21,8 +21,7 @@
   <main>
     <section class="headerSection">
       <div class="fundStatus">
-        <!--<span class="label">Invested</span>
-        <span class="labelData" >152512148</span> -->
+
 
         <span class="labelData" id="profitParent">
           <span id="profit">&nbsp;</span>
@@ -52,40 +51,51 @@
           <div class="tabHeader">
             <button class="tabHeaderButton" data-body="watchListTabBody" >Watch list</button>
           </div>
-    <!--       <div class="tabHeader">
-            <button class="tabHeaderButton" data-body="analyticsTabBody" >Analytics</button>
-          </div> -->
+          <div class="tabHeader">
+            <button class="tabHeaderButton" data-body="analyticsTabBody" >Analytics (βeta)</button>
+          </div> 
         </div>
         <div class="tabBodyContainer">
           <div class="tabBodyPanel">
             <div class="tabBody tabBodyActiveActive" id="investmentsTabBody">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>#</th>
-                    <th>Buy</th>
-                    <th>Current</th>
-                    <th>Invested</th>
-                    <th>Profit</th>
-                    <th class="highlight">&nbsp;&nbsp;&nbsp;%</th>
-                    <th>Research</th>
-                  </tr>
-                </thead>
-                <tbody id="investmentsTbody">
-                  <tr>
-                    <td colspan="6">
-                      <div class="loadingContainer">
-                        <div class="lds-facebook">
-                          <div></div>
-                          <div></div>
-                          <div></div>
+              <div class="tableContainer">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>#</th>
+                      <th>Buy</th>
+                      <th>Current</th>
+                      <th>Invested</th>
+                      <th>Profit</th>
+                      <th>&nbsp;&nbsp;&nbsp;%</th>
+                      <th>Research</th>
+                    </tr>
+                  </thead>
+                  <tbody id="investmentsTbody">
+                    <tr>
+                      <td colspan="8">
+                        <div class="loadingContainer">
+                          <div class="lds-facebook">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      </td>
+                    </tr>
+                    <tr id="reopenKiteRow">
+                      <td colspan="4">
+                       Unable to communicate Kite 
+                      </td>
+                      <td colspan="4">
+                        <button  id="closeAndReopenKiteBTn">Close & Reopen Kite</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+ 
             </div>
 
 
@@ -98,9 +108,7 @@
                     <span class="label">Sort Watch list by :</span>
                     <button id="sortBtnLooser" class="warn">Loser</button>
                     <button id="sortBtnGainer" class="good">Gainer</button>
-                    <div class="popup">
-                      Hello world Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam deserunt porro sit voluptatum tenetur similique, eaque neque officia possimus dolorem.
-                    </div>
+    
                   </div>
                   <div class="tableController">
                     <select id="tableFiler">
@@ -145,41 +153,48 @@
             </div>
       
 
-   <!--          <div class="tabBody" id="analyticsTabBody">
+           <div class="tabBody" id="analyticsTabBody">
               <div class="horizontalChild" >
-                <div class="panel">
-                  
+                <div class="bold">
+                Disclaimer: Research purpose only. Don't make buy/sell decision based on this chart only. Use at your own risk
                 </div>
                 <div class="tableController">
-                  <select id="tableFiler">
+                  <select id="analyticsTableFiler">
                     <option selected value="ALL">All</option>
-                  </select>
+                    <option selected value="hockey_curve">Hockey Curve</option>
+                    <option selected value="up">Going Up</option>
+                    <option selected value="down">Going Down</option>
+                  </select> 
                 </div>
               </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>hockey</th>
-                    <th>Partial Downhill</th>
-                    <th>Probability</th>
-                  </tr>
-                </thead>
-                <tbody id="analyticsTableBody">
-                  <tr>
-                    <td colspan="4">
-                      <div class="loadingContainer">
-                        <div class="lds-facebook">
-                          <div></div>
-                          <div></div>
-                          <div></div>
+              <div class="tableContainer">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Hockey Curve</th>
+                      <th>Going Down</th>
+                      <th>Going Up</th>
+                      <th>Links</th> 
+                    </tr>
+                  </thead>
+                  <tbody id="analyticsTableBody">
+                    <tr>
+                      <td colspan="4">
+                        <div class="loadingContainer">
+                          <div class="lds-facebook">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div> 
           </div>
   
         </div>
