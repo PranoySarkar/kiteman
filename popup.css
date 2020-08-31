@@ -14,7 +14,6 @@ body {
 }
 
 header {
-    border-bottom: 1px solid #9e9595;
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
@@ -49,7 +48,7 @@ button {
     border-radius: 3px;
     border: 1px solid #c7adad;
     font-weight: 400;
-    box-shadow: 0 0 9px 4px #73737321;
+    box-shadow: 00 0 2px 2px #b1b1b133;
     background: white;
     margin-right: 2px;
     cursor: pointer;
@@ -139,7 +138,7 @@ tr td:nth-child(1) {
 }
 
 .finalRow td {
-    border-top: 1px solid #797878;
+    border-top: 1px dashed #797878;
 }
 
 
@@ -276,7 +275,7 @@ tr td:nth-child(1) {
 
 .tabHeaders {
     display: grid;
-    grid-template-columns: auto auto 1fr;
+    grid-template-columns: auto auto auto 1fr;
 }
 
 .tabBodyContainer {
@@ -399,4 +398,61 @@ button.researchLinkBtn:focus {}
     font-size: .7rem;
     font-weight: 600;
     color: #F44336;
+}
+
+.newsTabBodyContent {
+    max-height: 356px;
+    overflow: auto;
+}
+
+.newsTabBodyContent li {
+    margin: 5px;
+    min-height: 29px;
+    border: 1px solid #e2dfdf;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    text-transform: capitalize;
+    /* padding: 0px 10px;*/
+}
+
+.newsTabBodyContent ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.iconLink {
+    background: #d7d7d7;
+    color: transparent;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    margin: 0 10px;
+    border-radius: 3px;
+}
+
+.openLink{
+    background: url(assets/open-link.png);
+    background-color: #5d5d5d;
+    background-position: center;
+}
+
+.type-buy {
+    background: linear-gradient(45deg, #8bc34a6b 1%, transparent 6%);
+}
+
+.type-reduce {
+    background: linear-gradient(45deg, #f64b206b 1%, transparent 6%);
+}
+
+.strongIndicator {
+    background: #f6481cde;
+    color: #FFF;
+    border: 1px solid #b9b9b9;
+    padding: 1px 10px;
+    border-radius: 6px;
+    margin-right: 10px;
+    font-size: .8rem;
 }

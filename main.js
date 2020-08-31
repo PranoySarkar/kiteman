@@ -50,20 +50,25 @@ function latestUpdate() {
 
 function main() {
     isLoggedIn().then(_ => {
-        sendMessage({
-            task: 'WATCH_LIST_UPDATE',
-            watchList: getWatchList()
-        })
+        
     }).then(_ => {
         return updateEncToken();
     })
-        .then(enc => {
-
+    .then(enc => {
             encToken = enc;
+          
+          return  getInstrumentTokens();
+        }).then(_=>{
             updateProfitAndLoss();
             updateCash();
-            getInstrumentTokens();
-        }).catch(_ => {
+            sendMessage({
+                task: 'WATCH_LIST_UPDATE',
+                watchList: getWatchList()
+            })
+        })
+        
+        .catch(err => {
+            console.error(err)
             sendMessage({
                 task: 'USER_NOT_LOGGED_IN',
             })
@@ -286,6 +291,7 @@ function getInstrumentTokens() {
                     };
                 });
                 instrumentTokenMap = cleanData.reduce((a, b) => Object.assign(a, b));
+                resolve();
             });
     })
 

@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,400&display=swap" rel="stylesheet">
   <script src="popup.js"></script>
- <script src="analytics.js"></script> 
+  <script src="analytics.js"></script>
+  <script src="news.js"></script>
   <link rel="stylesheet" href="popup.css">
   <title>KiteMain</title>
 </head>
@@ -51,6 +52,10 @@
           <div class="tabHeader">
             <button class="tabHeaderButton" data-body="watchListTabBody" >Watch list</button>
           </div>
+          <div class="tabHeader">
+            <button class="tabHeaderButton" data-body="newsTabBody" data-listener="generateNews"  >News & Stock Advice</button>
+          </div> 
+
           <div class="tabHeader">
             <button class="tabHeaderButton" data-body="analyticsTabBody" >Analytics (βeta)</button>
           </div> 
@@ -152,6 +157,22 @@
               </section>
             </div>
       
+            <div class="tabBody" id="newsTabBody">
+              <div class="horizontalChild" >
+                <div class="bold">
+                Disclaimer: Don't make buy/sell decision based on this list only. Do proper research. Use at your own risk
+                </div>
+              </div>
+              <div class="newsTabBodyContent">
+                <div class="loadingContainer">
+                  <div class="lds-facebook">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div> 
 
            <div class="tabBody" id="analyticsTabBody">
               <div class="horizontalChild" >
@@ -193,8 +214,9 @@
                   </tbody>
                 </table>
               </div>
-
             </div> 
+
+
           </div>
   
         </div>

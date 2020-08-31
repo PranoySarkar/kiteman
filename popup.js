@@ -100,6 +100,14 @@ function changeTab(event) {
     document.querySelector(`#${event.target.dataset.body}`).style.display = 'block'
   }
 
+  if(btn.dataset.listener){
+    window[btn.dataset.listener].call();
+  }
+
+}
+
+function generateNews(){
+  News.updateView();
 }
 
 function openKiteIfNotOpen() {
@@ -336,17 +344,17 @@ function updateDbForAnalytics() {
   if (currentHour >= 10 && currentHour <= 14 && currentDay != 'sat' && currentDay != 'sun') {
     // do not take  reading before 10  and after 3 (huge fluctuation in market)
     Analytics.getLastUpdated()
-      .then(lastUpdated => {
+      .then(async lastUpdated => {
         // each reading should be 45 apart
         if ((lastUpdated + 45 * 60 * 1000) < currentTime) {
           for (let i = 0; i < watchList.length; i++) {
             let eachInstrument = watchList[i];
-            saveInstrumentSnapshot(eachInstrument)
+           await  Analytics.saveInstrumentSnapshot(eachInstrument)
           }
           if(watchList.length>0){
             Analytics.cleanUp(watchList)
           }
-        
+          Analytics.do();
         }
       })
   } else {
