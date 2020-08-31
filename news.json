@@ -1,1 +1,16 @@
-{"news":[],"recommendations":[{"date":"2020-08-31","title":"buy | PNC Infratech","source":"x","type":"buy","instrumentName":"PNC Infratech"},{"date":"2020-08-31","title":"buy | PNC Infratech","source":"y","type":"buy","instrumentName":"PNC Infratech","strong":2},{"date":"2020-08-31","title":"buy | Reliance Industries","source":"y","type":"buy","instrumentName":"Reliance Industries"},{"date":"2020-08-31","title":"buy | Bharat Electronics","source":"x","type":"buy","instrumentName":"Bharat Electronics"},{"date":"2020-08-31","title":"buy | Indian Energy Exchange","source":"y","type":"buy","instrumentName":"Indian Energy Exchange","strong":2}]}
+{"news":[{
+    "title":"Cyient to acquire Australian consulting firm IG Partners",
+    "date":"2020-08-31",
+    "sources":[{
+        "name":"Economics Times",
+        "url":"https://economictimes.indiatimes.com/tech/software/cyient-to-acquire-australian-consulting-firm-ig-partners/articleshow/77843875.cms"
+    },
+    {
+        "title":"Cyient to acquire Australian consulting firm IG Partners",
+        "date":"2020-08-31",
+        "sources":[{
+            "name":"Economics Times",
+            "url":"https://economictimes.indiatimes.com/tech/software/cyient-to-acquire-australian-consulting-firm-ig-partners/articleshow/77843875.cms"
+        }
+]
+}],"recommendations":[{"date":"2020-08-31","title":"buy | PNC Infratech","source":"x","type":"buy","instrumentName":"PNC Infratech"},{"date":"2020-08-31","title":"buy | PNC Infratech","source":"y","type":"buy","instrumentName":"PNC Infratech","strong":2},{"date":"2020-08-31","title":"buy | Reliance Industries","source":"y","type":"buy","instrumentName":"Reliance Industries"},{"date":"2020-08-31","title":"buy | Bharat Electronics","source":"x","type":"buy","instrumentName":"Bharat Electronics"},{"date":"2020-08-31","title":"buy | Indian Energy Exchange","source":"y","type":"buy","instrumentName":"Indian Energy Exchange","strong":2}]}
