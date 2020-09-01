@@ -22,7 +22,7 @@ function init() {
   sendMessage({ task: 'LATEST_UPDATE' })
 
   initializeListeners();
-  getAnalyticsAndUpdateTable();
+  //getAnalyticsAndUpdateTable();
 }
 
 function openCleanKiteTab() {
@@ -76,10 +76,10 @@ function initializeListeners() {
     updateWatchListTable(evt.target.value);
   })
 
-  let analyticsTableFiler = document.querySelector('#analyticsTableFiler');
+/*   let analyticsTableFiler = document.querySelector('#analyticsTableFiler');
   analyticsTableFiler.addEventListener('change', (evt) => {
     getAnalyticsAndUpdateTable(evt.target.value);
-  })
+  }) */
 
   let closeAndReopenKiteBTn = document.querySelector('#closeAndReopenKiteBTn');
   closeAndReopenKiteBTn.addEventListener('click', () => {
@@ -167,7 +167,7 @@ function taskDispatcher(msg) {
   switch (msg.task) {
     case 'WATCH_LIST_UPDATE':
       watchList = msg.watchList;
-      updateDbForAnalytics()
+      //updateDbForAnalytics()
       updateWatchListTable();
       break;
 
@@ -337,7 +337,7 @@ function generateLinks(instrumentName) {
   `
   return links.trim();
 }
-function updateDbForAnalytics() {
+/* function updateDbForAnalytics() {
   let currentTime = new Date().getTime()
   let currentHour = new Date().getHours();
   let currentDay = new Date().toString().match(/^\w+/)[0].trim().toLowerCase()
@@ -360,7 +360,7 @@ function updateDbForAnalytics() {
   } else {
     console.log('Not taking reading, unstable market or saturday or sunday')
   }
-}
+} */
 function updateWatchListTable(condition = 'ALL') {
 
   let watchListTbody = document.querySelector('#watchListTbody')
