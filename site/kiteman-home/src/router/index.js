@@ -10,13 +10,16 @@ export default new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home
+      component: Home,
+  
+      
 
     },
     {
         path:'/loss-recovery-calculator',
         name:'loss-recovery-calculator',
-        component:LossRecoveryCalculatorComponent
+        component:LossRecoveryCalculatorComponent,
+       
     }
     
     /* ,

@@ -242,10 +242,12 @@ function updateInvestments(positions, holdings) {
     row.appendChild(td3);
 
     let td8 = document.createElement('td');
-    td8.innerHTML = `${Math.floor((eachInvestment.buyPrice) * 100) / 100}`
+    let buyPrice=Math.floor((eachInvestment.buyPrice) * 100) / 100
+    td8.innerHTML = buyPrice
     row.appendChild(td8);
 
     let td9 = document.createElement('td');
+    let currentPrice=eachInvestment.currentPrice;
     td9.innerHTML = `${Math.floor((eachInvestment.currentPrice) * 100) / 100}`
     row.appendChild(td9);
 
@@ -276,7 +278,17 @@ function updateInvestments(positions, holdings) {
 
     let td6 = document.createElement('td');
     td6.classList.add('highlight')
-    td6.innerHTML = `${Math.floor((perc) * 100) / 100} %`
+    if(perc<0){
+      td6.innerHTML = `<div class="dataWithLabel">
+      <span>${Math.floor((perc) * 100) / 100} %</span>
+      <span><a target="_blank" href="https://prnysarker.github.io/kiteman/#/loss-recovery-calculator?units=${eachInvestment.quantity}&buy=${buyPrice}&cprice=${currentPrice}">recover loss</a></span>
+      </div>
+      `
+    }else{
+      td6.innerHTML = `
+      <span>${Math.floor((perc) * 100) / 100} %</span>`
+    }
+
     row.appendChild(td6);
 
     let research = document.createElement('td');

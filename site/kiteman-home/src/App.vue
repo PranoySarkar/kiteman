@@ -13,6 +13,9 @@ export default {
   components: {
 
   },
+    mounted: function () {
+      document.title="KiteMan"
+  },
 };
 </script>
 
