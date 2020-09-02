@@ -8,20 +8,26 @@ let communicationSuccess = false;
 
 
 function init() {
-  openKiteIfNotOpen();
-  setTimeout(_ => {
+  if (isPrivacyPolicyAccepted()) {
+
+    hidePrivacyPolicy();
+
+    openKiteIfNotOpen();
+    setTimeout(_ => {
+      sendMessage({ task: 'LATEST_UPDATE' })
+    }, 3000)
+
+    setTimeout(_ => {
+      if (!communicationSuccess) {
+        document.querySelector('#reopenKiteRow').style.visibility = 'unset';
+      }
+    }, 6500)
+
     sendMessage({ task: 'LATEST_UPDATE' })
-  }, 3000)
 
-  setTimeout(_ => {
-    if (!communicationSuccess) {
-      document.querySelector('#reopenKiteRow').style.visibility = 'unset';
-    }
-  }, 6500)
+    initializeListeners();
+  }
 
-  sendMessage({ task: 'LATEST_UPDATE' })
-
-  initializeListeners();
   //getAnalyticsAndUpdateTable();
 }
 
@@ -76,10 +82,10 @@ function initializeListeners() {
     updateWatchListTable(evt.target.value);
   })
 
-/*   let analyticsTableFiler = document.querySelector('#analyticsTableFiler');
-  analyticsTableFiler.addEventListener('change', (evt) => {
-    getAnalyticsAndUpdateTable(evt.target.value);
-  }) */
+  /*   let analyticsTableFiler = document.querySelector('#analyticsTableFiler');
+    analyticsTableFiler.addEventListener('change', (evt) => {
+      getAnalyticsAndUpdateTable(evt.target.value);
+    }) */
 
   let closeAndReopenKiteBTn = document.querySelector('#closeAndReopenKiteBTn');
   closeAndReopenKiteBTn.addEventListener('click', () => {
@@ -88,6 +94,27 @@ function initializeListeners() {
     })
   });
 
+
+}
+
+function isPrivacyPolicyAccepted() {
+  try {
+    let policy = localStorage.getItem("privacy_policy");
+    if (policy && policy.trim().toLowerCase() == 'accepted') {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.error(e);
+    return false;
+
+  }
+
+}
+
+function hidePrivacyPolicy() {
+  document.querySelector('.license').style.display = 'none'
 }
 
 function changeTab(event) {
@@ -100,13 +127,13 @@ function changeTab(event) {
     document.querySelector(`#${event.target.dataset.body}`).style.display = 'block'
   }
 
-  if(btn.dataset.listener){
+  if (btn.dataset.listener) {
     window[btn.dataset.listener].call();
   }
 
 }
 
-function generateNews(){
+function generateNews() {
   News.updateView();
 }
 
@@ -242,12 +269,12 @@ function updateInvestments(positions, holdings) {
     row.appendChild(td3);
 
     let td8 = document.createElement('td');
-    let buyPrice=Math.floor((eachInvestment.buyPrice) * 100) / 100
+    let buyPrice = Math.floor((eachInvestment.buyPrice) * 100) / 100
     td8.innerHTML = buyPrice
     row.appendChild(td8);
 
     let td9 = document.createElement('td');
-    let currentPrice=eachInvestment.currentPrice;
+    let currentPrice = eachInvestment.currentPrice;
     td9.innerHTML = `${Math.floor((eachInvestment.currentPrice) * 100) / 100}`
     row.appendChild(td9);
 
@@ -278,13 +305,13 @@ function updateInvestments(positions, holdings) {
 
     let td6 = document.createElement('td');
     td6.classList.add('highlight')
-    if(perc<0){
+    if (perc < 0) {
       td6.innerHTML = `<div class="dataWithLabel">
       <span>${Math.floor((perc) * 100) / 100} %</span>
       <span><a target="_blank" href="https://prnysarker.github.io/kiteman/#/loss-recovery-calculator?units=${eachInvestment.quantity}&buy=${buyPrice}&cprice=${currentPrice}">recover loss</a></span>
       </div>
       `
-    }else{
+    } else {
       td6.innerHTML = `
       <span>${Math.floor((perc) * 100) / 100} %</span>`
     }
@@ -460,11 +487,11 @@ function getAnalyticsAndUpdateTable(filter = 'all') {
     let analyticsTableBody = document.querySelector('#analyticsTableBody')
     analyticsTableBody.innerHTML = '';
 
-    if(allInstruments.length==0){
-      
+    if (allInstruments.length == 0) {
+
       let row = document.createElement('tr');
       let dataNotPresent = document.createElement('td');
-      dataNotPresent.setAttribute('colspan',5);
+      dataNotPresent.setAttribute('colspan', 5);
       dataNotPresent.innerHTML = `Data not present`
       row.appendChild(dataNotPresent);
       analyticsTableBody.append(row)
@@ -503,11 +530,11 @@ function getAnalyticsAndUpdateTable(filter = 'all') {
 
     allInstruments = [...onlyHockey, ...allInstruments]
 
-    if(allInstruments.length==0){
-      
+    if (allInstruments.length == 0) {
+
       let row = document.createElement('tr');
       let dataNotPresent = document.createElement('td');
-      dataNotPresent.setAttribute('colspan',5);
+      dataNotPresent.setAttribute('colspan', 5);
       dataNotPresent.innerHTML = `Not enough data point.`
       row.appendChild(dataNotPresent);
       analyticsTableBody.append(row)
@@ -568,4 +595,14 @@ function sendMessage(msg) {
   });
 }
 
-window.addEventListener('load', init);
+
+
+window.addEventListener('load', _ => {
+  let privacyPolicyBtn = document.querySelector('#privacyPolicyBtn');
+  privacyPolicyBtn.addEventListener('click', () => {
+    localStorage.setItem("privacy_policy", "accepted");
+    init();
+  });
+  init();
+
+});
