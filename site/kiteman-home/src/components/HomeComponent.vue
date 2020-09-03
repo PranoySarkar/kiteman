@@ -2,7 +2,7 @@
   <div id="homeContainer">
     <div id="hero">
       <div class="imageContainer">
-        <img src="../assets/hero.png" alt />
+        <img src="../assets/site-assets/hero.png" alt />
       </div>
       <div class="lecture">
         <div>
