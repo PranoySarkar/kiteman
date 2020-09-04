@@ -9,11 +9,21 @@
           <a
             class="callToActionLink"
             target="_blank"
-            href="https://chrome.google.com/u/1/webstore/devconsole/b7258b33-d49c-432a-8930-e8c23fca9bde?hl=en"
+            href="https://chrome.google.com/webstore/detail/kiteman/oocpgkebpklbfpfjfahedanbalgajifk"
           >Install Now</a>
         </div>
       </div>
     </div>
+    <section class="features">
+      <ol>
+        <li>One Click Dashboard : In just one click you can see your whole portfolio from any tab.</li>
+        <li>Easy Research : Lot of out of box customized Research Solutions to get optimal result quickly.</li>
+        <li>Manage Watch List : You can sort your watch list, find top gainer/looser, do easy research, filter, etc.</li>
+        <li>One click to recovery loss calculator.</li>
+        <li>Get daily stock advice.</li>
+        <li>Get hand curated Business News only which that affects the market.</li>
+      </ol>
+    </section>
     <div class="eachFeature"></div>
   </div>
 </template>
@@ -44,7 +54,8 @@ img {
 }
 
 .imageContainer {
-  height: 75vh;
+  height: 42vw;
+  max-height: 71vh;
   border: 1px solid #b9b8b8;
   border-radius: 2px;
   display: inline-block;
@@ -63,28 +74,49 @@ img {
 
 .callToActionLink {
   background: white;
-  padding: 16px 80px;
+  padding: 16px 5vw;
   /* min-width: 127px; */
-  border: 1px solid #2c3e5066;
+  border: 1px solid #ffe9e9;
   border-radius: 2px;
   text-decoration: none;
   color: inherit;
   font-size: 3rem;
-  box-shadow: -1px -2px 20px #bbadad4f;
-  background: linear-gradient(45deg, #ffffff, #eceff3);
-  transition: all 0.05s;
-  /* color: #FFF; */
+  color: #ffffff;
+  box-shadow: 0px 15px 20px #1c1a1a42;
+  background: linear-gradient(45deg, #5d5d5d, #7f2008);
+  /* transition: all 0.05s; */
+  display: inline-block;
+  white-space: pre;
 }
 
 .callToActionLink:hover {
-  box-shadow: -1px -2px 10px #bbadad4f;
-
   /* color: #FFF; */
 }
 
 .callToActionLink:active {
-  box-shadow: unset;
+  box-shadow: 0px 15px 20px #1c1a1a0e;
 
   /* color: #FFF; */
+}
+
+section {
+  max-width: 90vw;
+  margin: auto;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+h1 {
+  color: #f6542b;
+}
+
+ol {
+  border: 1px solid #dedddd;
+  padding: 15px 15px 15px 35px;
+  box-shadow: 2px 2px 6px 4px #eaeaea;
+}
+li {
+  font-size: 1.8rem;
+  margin: 12px;
 }
 </style>

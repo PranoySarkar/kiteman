@@ -305,6 +305,7 @@ tr td:nth-child(1) {
     border-radius: 0px;
     border-top-right-radius: 18px;
     border-top-left-radius: 18px;
+    min-width: 100px;
 }
 
 .tabHeaderButton.active {
@@ -641,4 +642,29 @@ button.researchLinkBtn:focus {}
     background: #f6f6f4;
     /* border: 1px solid #ebebeb; */
     padding: 4px;
+}
+
+.stockAdviceLink {
+    text-decoration: none;
+    border: 1px solid #aeaaaa;
+    padding: 0 5px;
+    border-radius: 3px;
+}
+
+.stockAdviceList .label {
+    display: block;
+    margin-top: 11px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    /* color: antiquewhite; */
+}
+
+.stockAdviceList {
+    padding-left: 5px;
+}
+
+.stockAdviceList li {
+    display: inline-block;
+    margin-right: 2px;
+    margin-bottom: 5px;
 }

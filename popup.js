@@ -312,8 +312,9 @@ function updateInvestments(positions, holdings) {
       </div>
       `
     } else {
-      td6.innerHTML = `
-      <span>${Math.floor((perc) * 100) / 100} %</span>`
+      td6.innerHTML = `<div class="dataWithLabel">
+      <span>${Math.floor((perc) * 100) / 100} %</span>
+      </div>`
     }
 
     row.appendChild(td6);

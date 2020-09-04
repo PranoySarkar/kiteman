@@ -40,13 +40,13 @@ body {
 header {
     /* background: linear-gradient(83deg, #393737, #837777); */
     /* border-bottom: 0px solid #ff9800; */
-    border-right: 10px solid #8191a4c7;
-    box-shadow: 3px 3px 6px 3px #6c6e7a38;
-    overflow: hidden;
+    /* border-right: 10px solid #8191a4c7; */
+    /* box-shadow: 3px 3px 6px 3px #6c6e7a38; */
+    /* overflow: hidden; */
     padding: 0 0 0 10px;
     color: #f6542b;
-    width: 43vw;
-    border-bottom-right-radius: 80px;
-    min-width: 200px;
+    /* width: 43vw; */
+    /* border-bottom-right-radius: 80px; */
+    /* min-width: 200px;*/
 }
 </style>
