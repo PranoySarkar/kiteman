@@ -38,38 +38,35 @@ export default {
 
 <style  scoped>
 #hero {
-  max-height: 80vh;
-  overflow: hidden;
-
-  max-width: 80vw;
-  margin: auto;
-  padding: 10px;
-  margin-top: 20px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
 }
 
 img {
   height: 100%;
   width: auto;
+  border: 1px solid #dad3d3;
+  padding: 10px;
+  box-shadow: 0 0 7px 1px #0000002e;
+  background: #f9f9f9;
 }
 
 .imageContainer {
-  height: 42vw;
-  max-height: 71vh;
-  border: 1px solid #b9b8b8;
-  border-radius: 2px;
-  display: inline-block;
-  padding: 10px;
-  box-shadow: 0 0 7px 3px #c9c9c966;
+  height: 80vh;
+  background: white;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  max-width: 95vw;
+  /* box-shadow: 0 0 0px #000;*/
 }
 
 .lecture {
-  /* background: aliceblue; */
-  width: 100%;
+  padding: 50px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-left: 20px;
+  justify-content: center;
 }
 
 .callToActionLink {
@@ -118,5 +115,27 @@ ol {
 li {
   font-size: 1.8rem;
   margin: 12px;
+}
+
+@media screen and (max-width: 1000px) {
+  #hero {
+    grid-template-columns: unset;
+  }
+  .callToActionLink {
+    padding: 16px 10vw;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  .imageContainer {
+    height: unset;
+    max-width: 85vw;
+    /* box-shadow: 0 0 0px #000;*/
+  }
 }
 </style>

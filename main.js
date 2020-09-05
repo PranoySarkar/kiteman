@@ -16,7 +16,6 @@ function taskDispatcher(msg) {
             break;
         case 'GET_WATCH_LIST':
             let watchList = getWatchList();
-            console.log('Sending watchlist ', watchList.length)
             sendMessage({
                 task: 'WATCH_LIST_UPDATE',
                 watchList
@@ -178,7 +177,6 @@ function updateCash() {
     })
         .then(res => res.json())
         .then(margins => {
-            console.log(margins)
             data = margins.data.equity;
             sendMessage({
                 task: 'CASH_UPDATE',

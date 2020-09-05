@@ -9,12 +9,14 @@ let communicationSuccess = false;
 
 function init() {
   if (isPrivacyPolicyAccepted()) {
-
     hidePrivacyPolicy();
-
     openKiteIfNotOpen();
+
     setTimeout(_ => {
       sendMessage({ task: 'LATEST_UPDATE' })
+      setInterval(_=>{
+        sendMessage({ task: 'LATEST_UPDATE' })
+      },30*1000)
     }, 3000)
 
     setTimeout(_ => {
