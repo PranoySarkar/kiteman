@@ -14,6 +14,16 @@
         </div>
       </div>
     </div>
+    <section>
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/jEj7F9D60m0"
+        frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </section>
     <section class="features">
       <ol>
         <li>One Click Dashboard : In just one click you can see your whole portfolio from any tab.</li>
@@ -24,6 +34,7 @@
         <li>Get hand curated Business News only which that affects the market.</li>
       </ol>
     </section>
+
     <div class="eachFeature"></div>
   </div>
 </template>
