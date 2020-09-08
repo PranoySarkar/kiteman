@@ -2,7 +2,12 @@
   <div id="homeContainer">
     <div id="hero">
       <div class="imageContainer">
-        <img src="../assets/site-assets/hero.png" alt />
+        <iframe
+          src="https://www.youtube.com/embed/kjeqSBWPx60?rel=0"
+          frameborder="0"
+          allow="encrypted-media; gyroscope;"
+          allowfullscreen
+        ></iframe>
       </div>
       <div class="lecture">
         <div>
@@ -68,11 +73,17 @@ img {
   background: white;
   display: flex;
   justify-content: center;
+  align-items: center;
   overflow: hidden;
   max-width: 95vw;
   /* box-shadow: 0 0 0px #000;*/
 }
 
+.imageContainer iframe {
+  width: 60vw;
+  height: 34vw;
+  background:#f6542b;
+}
 .lecture {
   padding: 50px;
   display: flex;
@@ -131,6 +142,11 @@ li {
 @media screen and (max-width: 1000px) {
   #hero {
     grid-template-columns: unset;
+  }
+  .imageContainer iframe {
+    width: 87vw;
+    height: 48vw;
+    background: #f6542b;
   }
   .callToActionLink {
     padding: 16px 10vw;
