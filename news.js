@@ -34,9 +34,7 @@ function updateNews(news) {
     let newsBody = document.querySelector('#newsBody');
     newsBody.innerHTML = '';
     let ul = document.createElement('ul');
-    let allNews = news.filter(eachNews => {
-        return new Date().getDate() === new Date(eachNews.date).getDate();
-    });
+    let allNews = news;
 
 
     if (allNews.length == 0 ) {

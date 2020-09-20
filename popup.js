@@ -14,9 +14,9 @@ function init() {
 
     setTimeout(_ => {
       sendMessage({ task: 'LATEST_UPDATE' })
-      setInterval(_=>{
+      setInterval(_ => {
         sendMessage({ task: 'LATEST_UPDATE' })
-      },30*1000)
+      }, 30 * 1000)
     }, 3000)
 
     setTimeout(_ => {
@@ -79,15 +79,27 @@ function initializeListeners() {
   });
 
 
+  let watchListTableFilerPreviouslySelected = localStorage.getItem('watchListTableFiler');
   let tableFiler = document.querySelector('#tableFiler');
   tableFiler.addEventListener('change', (evt) => {
-    updateWatchListTable(evt.target.value);
+    localStorage.setItem('watchListTableFiler',evt.target.value )
+    updateWatchListTable();
   })
+  if (watchListTableFilerPreviouslySelected != undefined) {
+    tableFiler.value = watchListTableFilerPreviouslySelected;
+  }
 
-  /*   let analyticsTableFiler = document.querySelector('#analyticsTableFiler');
-    analyticsTableFiler.addEventListener('change', (evt) => {
-      getAnalyticsAndUpdateTable(evt.target.value);
-    }) */
+
+  let investmentTableFilerPreviouslySelected = localStorage.getItem('investmentTableFiler');
+  let investmentTableFiler = document.querySelector('#investmentTableFiler');
+  investmentTableFiler.addEventListener('change', (evt) => {
+    localStorage.setItem('investmentTableFiler',evt.target.value )
+    populateInvestmentTable();
+  })
+  if (investmentTableFilerPreviouslySelected != undefined) {
+    investmentTableFiler.value = investmentTableFilerPreviouslySelected;
+  }
+
 
   let closeAndReopenKiteBTn = document.querySelector('#closeAndReopenKiteBTn');
   closeAndReopenKiteBTn.addEventListener('click', () => {
@@ -206,6 +218,7 @@ function taskDispatcher(msg) {
 
     case 'FUND_UPDATE':
       let profitParent = document.querySelector('#profitParent');
+
       if (msg.data.profit > 0) {
         profitParent.classList.remove('warn');
         profitParent.classList.add('good');
@@ -245,22 +258,76 @@ function taskDispatcher(msg) {
       break;
   }
 }
-
+allInvestments = [];
 function updateInvestments(positions, holdings) {
+
+  allInvestments = [...positions, ...holdings];
+  allInvestments = allInvestments.map(eachInvestment => {
+    eachInvestment.totalInvested = eachInvestment.quantity * eachInvestment.buyPrice
+    eachInvestment.totalCurrentValue = eachInvestment.quantity * eachInvestment.currentPrice
+    eachInvestment.profit = eachInvestment.totalCurrentValue - eachInvestment.totalInvested;
+    eachInvestment.deepLinkHref = `https://kite.zerodha.com/chart/web/ciq/${eachInvestment.exchange}/${eachInvestment.name}/${eachInvestment.instrumentToken}`;
+    eachInvestment.profitPerc = (((eachInvestment.profit) / eachInvestment.totalInvested) * 100);
+    return eachInvestment;
+  })
+
+  populateInvestmentTable();
+
+
+}
+
+function populateInvestmentTable() {
+
   let investmentsTbody = document.querySelector('#investmentsTbody')
   investmentsTbody.innerHTML = '';
 
-  let allInvestments = [...positions, ...holdings]
+  let userSelection = document.querySelector('#investmentTableFiler').value;
+  let filteredInvestment = []
+  switch (userSelection) {
+    case 'ALL':
+      filteredInvestment = [...allInvestments];
+      break;
+    case 'SORTBYINVESTMENT':
+      filteredInvestment = [...allInvestments].sort((b, a) => a.totalInvested - b.totalInvested)
+      break;
+    case 'SORTBYPROFIT':
+      filteredInvestment = [...allInvestments].sort((b, a) => a.profit - b.profit)
+      break;
+    case 'SORTBYPROFITPERC':
+      filteredInvestment = [...allInvestments].sort((b, a) => a.profitPerc - b.profitPerc)
+      break;
+
+    case 'ONLYPROFIT':
+      filteredInvestment = [...allInvestments].filter((a) => a.profit >= 0)
+      break;
+    case 'ONLYLOSS':
+      filteredInvestment = [...allInvestments].filter((a) => a.profit < 0)
+      break;
+
+    default:
+      filteredInvestment = [...allInvestments];
+      break;
+  }
+
+  let filtered=allInvestments.length-filteredInvestment.length;
+  if(filtered>0){
+    document.querySelector('.hiddenWarning').innerHTML=`${filtered} hidden`;
+  }else{
+    document.querySelector('.hiddenWarning').innerHTML='';
+  }
+  
+
   let allInvestment = 0;
   let allProfit = 0;
-  for (let i = 0; i < allInvestments.length; i++) {
-    let eachInvestment = allInvestments[i];
+
+  for (let i = 0; i < filteredInvestment.length; i++) {
+    let eachInvestment = filteredInvestment[i];
 
     let row = document.createElement('tr');
 
 
     let td2 = document.createElement('td');
-    td2.innerHTML = `<a class="deepLInk"  target="_blank" href="https://kite.zerodha.com/chart/web/ciq/${eachInvestment.exchange}/${eachInvestment.name}/${eachInvestment.instrumentToken}" >
+    td2.innerHTML = `<a class="deepLInk"  target="_blank" href="${eachInvestment.deepLinkHref}" >
     ${eachInvestment.name}</a>`
     row.appendChild(td2);
 
@@ -280,26 +347,24 @@ function updateInvestments(positions, holdings) {
     td9.innerHTML = `${Math.floor((eachInvestment.currentPrice) * 100) / 100}`
     row.appendChild(td9);
 
-    let totalInvested = eachInvestment.quantity * eachInvestment.buyPrice
-    allInvestment += totalInvested;
+
+    allInvestment += eachInvestment.totalInvested;
     let td4 = document.createElement('td');
     td4.classList.add('highlight')
-    td4.innerHTML = `${Math.floor((totalInvested) * 100) / 100}`
+    td4.innerHTML = `${Math.floor((eachInvestment.totalInvested) * 100) / 100}`
     row.appendChild(td4);
 
-    let totalCurrentValue = eachInvestment.quantity * eachInvestment.currentPrice
-    let profit = totalCurrentValue - totalInvested;
-    allProfit += profit;
+
+    allProfit += eachInvestment.profit;
 
     let td5 = document.createElement('td');
     td5.classList.add('highlight')
-    td5.innerHTML = `${Math.floor((profit) * 100) / 100}`
+    td5.innerHTML = `${Math.floor((eachInvestment.profit) * 100) / 100}`
     row.appendChild(td5);
 
 
-    let perc = (((profit) / totalInvested) * 100);
 
-    if (perc < 0) {
+    if (eachInvestment.profitPerc < 0) {
       row.classList.add('warn')
     } else {
       row.classList.add('good')
@@ -307,15 +372,15 @@ function updateInvestments(positions, holdings) {
 
     let td6 = document.createElement('td');
     td6.classList.add('highlight')
-    if (perc < 0) {
+    if (eachInvestment.profitPerc < 0) {
       td6.innerHTML = `<div class="dataWithLabel">
-      <span>${Math.floor((perc) * 100) / 100} %</span>
+      <span>${Math.floor((eachInvestment.profitPerc) * 100) / 100} %</span>
       <span><a target="_blank" href="https://prnysarker.github.io/kiteman/#/loss-recovery-calculator?units=${eachInvestment.quantity}&buy=${buyPrice}&cprice=${currentPrice}">recover loss</a></span>
       </div>
       `
     } else {
       td6.innerHTML = `<div class="dataWithLabel">
-      <span>${Math.floor((perc) * 100) / 100} %</span>
+      <span>${Math.floor((eachInvestment.profitPerc) * 100) / 100} %</span>
       </div>`
     }
 
@@ -338,27 +403,30 @@ function updateInvestments(positions, holdings) {
   totalTd.setAttribute('colspan', '4')
   finalRow.appendChild(totalTd)
 
-  let allInvestmentTd = document.createElement('td');
-  allInvestmentTd.innerHTML = Math.floor(allInvestment * 100) / 100;;
-  finalRow.appendChild(allInvestmentTd)
+  if (allInvestment > 0) {
+    let allInvestmentTd = document.createElement('td');
+    allInvestmentTd.innerHTML = Math.floor(allInvestment * 100) / 100;;
+    finalRow.appendChild(allInvestmentTd)
 
-  let allProfitTd = document.createElement('td');
-  allProfitTd.innerHTML = Math.floor(allProfit * 100) / 100;
-  finalRow.appendChild(allProfitTd)
+    let allProfitTd = document.createElement('td');
+    allProfitTd.innerHTML = Math.floor(allProfit * 100) / 100;
+    finalRow.appendChild(allProfitTd)
 
-  if (allProfit < 0) {
-    finalRow.classList.add('warn')
-  } else {
-    finalRow.classList.add('good')
+    if (allProfit < 0) {
+      finalRow.classList.add('warn')
+    } else {
+      finalRow.classList.add('good')
+    }
+
+    let totalPerc = document.createElement('td');
+    totalPerc.classList.add('highlight')
+    totalPerc.setAttribute('colspan', '2')
+    totalPerc.innerHTML = `${Math.floor((allProfit / allInvestment) * 100 * 100) / 100} %`;
+    finalRow.appendChild(totalPerc)
+
+    investmentsTbody.appendChild(finalRow)
   }
 
-  let totalPerc = document.createElement('td');
-  totalPerc.classList.add('highlight')
-  totalPerc.setAttribute('colspan', '2')
-  totalPerc.innerHTML = `${Math.floor((allProfit / allInvestment) * 100 * 100) / 100} %`;
-  finalRow.appendChild(totalPerc)
-
-  investmentsTbody.appendChild(finalRow)
 }
 
 
@@ -407,6 +475,8 @@ function updateWatchListTable(condition = 'ALL') {
 
   let watchListTbody = document.querySelector('#watchListTbody')
   watchListTbody.innerHTML = '';
+  condition = document.querySelector('#tableFiler').value;
+ 
 
   let tempWatchList = [];
   switch (condition) {

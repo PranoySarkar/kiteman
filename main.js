@@ -49,15 +49,15 @@ function latestUpdate() {
 
 function main() {
     isLoggedIn().then(_ => {
-        
+
     }).then(_ => {
         return updateEncToken();
     })
-    .then(enc => {
+        .then(enc => {
             encToken = enc;
-          
-          return  getInstrumentTokens();
-        }).then(_=>{
+
+            return getInstrumentTokens();
+        }).then(_ => {
             updateProfitAndLoss();
             updateCash();
             sendMessage({
@@ -65,7 +65,7 @@ function main() {
                 watchList: getWatchList()
             })
         })
-        
+
         .catch(err => {
             console.error(err)
             sendMessage({
@@ -203,7 +203,7 @@ function getWatchList() {
             let name = (niceName.innerText)
             let instrumentToken = '';
             let exchange = 'BSE'
-            if (instrumentTokenMap) {
+            if (instrumentTokenMap &&  instrumentTokenMap[name]) {
                 instrumentToken = instrumentTokenMap[name].instrumentToken;
                 exchange = instrumentTokenMap[name].exchange;
             }
@@ -279,7 +279,8 @@ function getInstrumentTokens() {
         })
             .then(res => res.json())
             .then(holdings => {
-                let cleanData = holdings.data[0].items.map(eachHording => {
+                let allItems=[ holdings.data[0].items, holdings.data[1].items, holdings.data[2].items, holdings.data[3].items, holdings.data[4].items]
+                let cleanData =allItems.map(eachHording => {
                     return {
                         [eachHording.tradingsymbol]: {
                             instrumentToken: eachHording.instrument_token,
@@ -313,13 +314,63 @@ function getHoldings() {
             .then(res => res.json())
             .then(holdings => {
                 let cleanData = holdings.data.map(eachHording => {
+                    /** // after T1 JKLAKSHMI  
+                     * {
+                        "tradingsymbol": "JKLAKSHMI",
+                        "exchange": "NSE",
+                        "instrument_token": 3453697,
+                        "isin": "INE786A01032",
+                        "product": "CNC",
+                        "price": 0,
+                        "quantity": 5,
+                        "t1_quantity": 11,
+                        "realised_quantity": 5,
+                        "authorised_quantity": 0,
+                        "opening_quantity": 16,
+                        "collateral_quantity": 0,
+                        "collateral_type": "",
+                        "discrepancy": false,
+                        "average_price": 260.875,
+                        "last_price": 254.6,
+                        "close_price": 253.4,
+                        "pnl": -100.40000000000009,
+                        "day_change": 1.1999999999999886,
+                        "day_change_percentage": 0.47355958958168454
+                        }
+                     *  check for cell & new buy
+                     */
+
+                    /**
+                     * {
+                        "tradingsymbol": "RELIANCE",
+                        "exchange": "NSE",
+                        "instrument_token": 738561,
+                        "isin": "INE002A01018",
+                        "product": "CNC",
+                        "price": 0,
+                        "quantity": 0,
+                        "t1_quantity": 0,
+                        "realised_quantity": 0,
+                        "authorised_quantity": 0,
+                        "opening_quantity": 1,
+                        "collateral_quantity": 0,
+                        "collateral_type": "",
+                        "discrepancy": false,
+                        "average_price": 2153.6,
+                        "last_price": 2280.95,
+                        "close_price": 2161.35,
+                        "pnl": 0,
+                        "day_change": 119.59999999999991,
+                        "day_change_percentage": 5.533578550443006
+                        }
+                     */
                     return {
                         name: eachHording.tradingsymbol,
                         buyPrice: eachHording.average_price,
                         instrumentToken: eachHording.instrument_token,
                         currentPrice: eachHording.last_price,
                         exchange: eachHording.exchange,
-                        quantity: eachHording.quantity || eachHording.t1_quantity
+                        quantity: eachHording.t1_quantity+eachHording.quantity
                     };
                 });
                 resolve(cleanData);

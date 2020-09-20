@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
 	"name": "KiteMan",
-	"description": "Get your trading account status in click from any tab. | Research on Stocks | Sort wish list | Drill down wish list | and many more",
-	"version": "1.1",
+	"description": "One click trading account Status from any tab | Stock Advice | Business News | Research on Stocks | and many more",
+	"version": "1.2.1",
 	"icons": {
 		"16": "icon.png",
 		"48": "icon.png",
