@@ -2,7 +2,7 @@
 
 ### KiteMan is One Click simplified  dashboard for zerodha kite 
 
-[KiteMan home page](https://prnysarker.github.io/kiteman/#/)
+[KiteMan home page](https://prnysarker.github.io/kiteman/#/) | 
 [Install Now](https://chrome.google.com/webstore/detail/kiteman/oocpgkebpklbfpfjfahedanbalgajifk?hl=en&authuser=1)
 
 # Key features 
