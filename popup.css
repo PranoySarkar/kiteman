@@ -724,18 +724,19 @@ span.hiddenWarning {
 }
 
 .badge {
-    background: #ffffff;
+
     width: 27px;
     height: 27px;
     border-radius: 50%;
-    color: #1f1e1f;
+    color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     right: -3px;
     top: -13px;
-    border: 3px solid #847d7d;
+    border: 3px solid #5d5d5d;
     font-size: .7rem;
     visibility: hidden;
+    background: #f6461a;
 }

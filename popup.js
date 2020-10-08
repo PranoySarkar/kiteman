@@ -379,7 +379,7 @@ function populateInvestmentTable() {
     if (eachInvestment.profitPerc < 0) {
       td6.innerHTML = `<div class="dataWithLabel">
       <span>${Math.floor((eachInvestment.profitPerc) * 100) / 100} %</span>
-      <span><a target="_blank" href="https://prnysarker.github.io/kiteman/#/loss-recovery-calculator?units=${eachInvestment.quantity}&buy=${buyPrice}&cprice=${currentPrice}">recover loss</a></span>
+      <span><a target="_blank" href="https://pranoysarkar.github.io/kiteman/#/loss-recovery-calculator?units=${eachInvestment.quantity}&buy=${buyPrice}&cprice=${currentPrice}">recover loss</a></span>
       </div>
       `
     } else {

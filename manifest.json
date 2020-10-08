@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "KiteMan",
 	"description": "One click trading account Status from any tab | Stock Advice | Business News | Research on Stocks | and many more",
-	"version": "1.2.2",
+	"version": "1.2.4",
 	"icons": {
 		"16": "icon.png",
 		"48": "icon.png",

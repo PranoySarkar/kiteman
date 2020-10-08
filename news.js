@@ -6,7 +6,7 @@ News.get = function () {
         if(newsFromNetwork){
             return resolve(newsFromNetwork);
         }
-        fetch(`https://prnysarker.github.io/kiteman/news.json?date=${new Date().getTime()}`)
+        fetch(`https://pranoysarkar.github.io/kiteman/news.json?date=${new Date().getTime()}`)
             .then(r => r.json()).then(responseBody => {
                 newsFromNetwork=responseBody;
                 return resolve(responseBody)
@@ -49,7 +49,7 @@ News.cleanNewNews=function(){
     return new Promise((resolve,reject)=>{
         let oldNews=JSON.parse(localStorage.getItem('newsStore')||'[]')
         for(let each of oldNews){
-           // each.viewed=true;
+            each.viewed=true;
         }
         localStorage.setItem('newsStore',JSON.stringify(oldNews))
         resolve();
@@ -90,7 +90,7 @@ News.cleanStockAdvice=function(){
     return new Promise((resolve,reject)=>{
         let stockAdviceStore=JSON.parse(localStorage.getItem('stockAdviceStore')||'[]')
         for(let each of stockAdviceStore){
-             each.viewed=true;
+            each.viewed=true;
          }
         localStorage.setItem('stockAdviceStore',JSON.stringify(stockAdviceStore))
         resolve();
