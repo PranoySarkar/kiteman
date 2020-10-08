@@ -290,6 +290,7 @@ tr td:nth-child(1) {
     background: #FFF;
     display: none;
     padding-bottom: 5px;
+    min-width: 610px;
 }
 
 .tabBodyActiveActive {
@@ -307,6 +308,7 @@ tr td:nth-child(1) {
     border-top-right-radius: 18px;
     border-top-left-radius: 18px;
     min-width: 100px;
+    position: relative;
 }
 
 .tabHeaderButton.active {
@@ -719,4 +721,21 @@ span.hiddenWarning {
     font-weight: 600;
     color: #F44336;
     padding-right: 10px;
+}
+
+.badge {
+    background: #ffffff;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    color: #1f1e1f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: -3px;
+    top: -13px;
+    border: 3px solid #847d7d;
+    font-size: .7rem;
+    visibility: hidden;
 }

@@ -57,8 +57,8 @@
           <label id="availableLabel">&nbsp;</label>
         </span>
         <span class="labelData totalAssetContainer">
-          <span id="totalAsset">&nbsp;</span>
-          <label id="totalAssetLabel">&nbsp;</label>
+          <!--      <span id="totalAsset">&nbsp;</span>
+          <label id="totalAssetLabel">&nbsp;</label> -->
         </span>
       </div>
 
@@ -70,14 +70,22 @@
             <button class="tabHeaderButton active" data-body="investmentsTabBody">My Investments</button>
           </div>
           <div class="tabHeader">
+            <button class="tabHeaderButton" data-body="newsTabBody" data-listener="generateNews"> 
+              <div  id="newsBadge" class="badge"></div>
+              News 
+            </button>
+          </div>
+          <div class="tabHeader">
+            <button class="tabHeaderButton" data-body="stockTabBody" data-listener="renderStocks">
+              <div  id="stockBadge" class="badge"></div>
+              Stock Advice 
+            </button>
+          </div>
+          <div class="tabHeader">
             <button class="tabHeaderButton" data-body="watchListTabBody">Watch list</button>
           </div>
-          <div class="tabHeader">
-            <button class="tabHeaderButton" data-body="stockTabBody" data-listener="generateNews">Stock Advice </button>
-          </div>
-          <div class="tabHeader">
-            <button class="tabHeaderButton" data-body="newsTabBody" data-listener="generateNews">News </button>
-          </div>
+
+
         </div>
         <div class="tabBodyContainer">
           <div class="tabBodyPanel">
@@ -306,11 +314,11 @@
   <footer>
     <div class="socialShare">
       <a target="_blank"
-        href="https://twitter.com/intent/tweet?url=https://prnysarker.github.io/kiteman/&text=Install kiteMan&related=kiteMan">
+        href="https://twitter.com/intent/tweet?url=https://prnysarker.github.io/kiteman/&text=Get one click 🎀AWESOME DASHBOARD🎀 of your portfolio, Business News📈, 👉Stock Advice and many more. 👋Install KiteMan now👋&related=kiteMan">
         <img src="/assets/twitter.jpg" alt="">
       </a>
       <a target="_blank"
-        href="https://www.facebook.com/sharer/sharer.php?u=https://prnysarker.github.io/kiteman/&quote=Install kiteMan">
+        href="https://www.facebook.com/sharer/sharer.php?u=https://prnysarker.github.io/kiteman/&quote=Get one click AWESOME DASHBOARD of your portfolio, Business News, Stock Advice and many more. Install KiteMan now">
         <img src="/assets/facebook.jpg" alt="">
       </a>
       <a id="home" target="_blank" href="https://prnysarker.github.io/kiteman/#/?ext=true">

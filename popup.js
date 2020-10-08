@@ -151,6 +151,10 @@ function generateNews() {
   News.updateView();
 }
 
+function renderStocks(){
+  News.renderStocks();
+}
+
 function openKiteIfNotOpen() {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({}, tabs => {
@@ -238,9 +242,9 @@ function taskDispatcher(msg) {
       document.querySelector('#investedLabel').innerHTML = `invested`;
       updateInvestments(msg.data.positions, msg.data.holdings)
 
-      let tempx = totalAvailableFund + totalProfit + totalInvested
-      document.querySelector('#totalAsset').innerHTML = `${Math.floor(tempx * 100) / 100}`;
-      document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `;
+      //let tempx = totalAvailableFund + totalProfit + totalInvested
+     // document.querySelector('#totalAsset').innerHTML = `${Math.floor(tempx * 100) / 100}`;
+      //document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `;
 
       break;
 
@@ -249,12 +253,12 @@ function taskDispatcher(msg) {
       totalAvailableFund = Math.floor((msg.data.net) * 100) / 100
 
       document.querySelector('#available').innerHTML = `${totalAvailableFund}`;
-      document.querySelector('#availableLabel').innerHTML = `available`;
+      document.querySelector('#availableLabel').innerHTML = `available cash`;
 
 
-      let temp = totalAvailableFund + totalProfit + totalInvested
+/*       let temp = totalAvailableFund + totalProfit + totalInvested
       document.querySelector('#totalAsset').innerHTML = `${Math.floor(temp * 100) / 100}`;
-      document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `;
+      document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `; */
       break;
   }
 }
