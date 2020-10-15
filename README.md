@@ -3,7 +3,7 @@
 ### KiteMan is One Click simplified  dashboard for zerodha kite 
 
 
-[Install Now](https://chrome.google.com/webstore/detail/kiteman/oocpgkebpklbfpfjfahedanbalgajifk?hl=en&authuser=1)
+[Install Now](https://chrome.google.com/webstore/detail/kiteman/oocpgkebpklbfpfjfahedanbalgajifk?hl=en&authuser=1) | [Home](https://pranoysarkar.github.io/kiteman/)
 
 # Key features 
  - One Click Dashboard : In just one click you can see your whole portfolio from any tab.
