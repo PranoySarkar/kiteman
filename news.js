@@ -27,7 +27,7 @@ News.getAndUpdateNewNewsCount=function(allNews){
             let foundInOldNews=oldNews.findIndex(x=>x.title==eachNews.title);
             if(foundInOldNews==-1){
                 newNews++;
-                oldNews.push({
+                oldNews.unshift({
                     title:eachNews.title,
                     viewed:false,
                 })
@@ -68,7 +68,7 @@ News.getAndUpdateNewStockAdviceCount=function(allAdvice){
             let foundInOldStockAdvice=stockAdviceStore.findIndex(x=>x.title==eachAdvice.title);
             if(foundInOldStockAdvice==-1){
                 newAdvice++;
-                stockAdviceStore.push({
+                stockAdviceStore.unshift({
                     title:eachAdvice.title,
                     viewed:false,
                 })
@@ -78,7 +78,7 @@ News.getAndUpdateNewStockAdviceCount=function(allAdvice){
                 }
             }
         }
-        stockAdviceStore=stockAdviceStore.slice(0,50);
+        stockAdviceStore=stockAdviceStore.slice(0,20);
         localStorage.setItem('stockAdviceStore',JSON.stringify(stockAdviceStore))
         resolve(newAdvice);
     })

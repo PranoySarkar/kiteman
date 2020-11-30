@@ -1,33 +1,31 @@
 {
-	"manifest_version": 2,
-	"name": "KiteMan",
-	"description": "One click trading account Status from any tab | Stock Advice | Business News | Research on Stocks | and many more",
-	"version": "1.2.4",
-	"icons": {
-		"16": "icon.png",
-		"48": "icon.png",
-		"128": "icon.png"
-	},
-	"browser_action": {
-		"default_icon": "icon.png",
-		"default_popup": "popup.html"
-	},
-	"background": {
-		"scripts": [
-			"background.js"
-		]
-	},
-	"content_scripts": [
-		{
-			"matches": [
-				"*://kite.zerodha.com/*"
-			],
-			"js": [
-				"main.js"
-			]
-		}
-	],
-	"permissions": [
-		"tabs"
-	]
+    "manifest_version": 2,
+    "name": "KiteMan",
+    "description": "One click trading account Status from any tab | Stock Advice | Business News | Research on Stocks | and many more",
+    "version": "1.2.5",
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "content_scripts": [{
+        "matches": [
+            "*://kite.zerodha.com/*"
+        ],
+        "js": [
+            "main.js"
+        ]
+    }],
+    "permissions": [
+        "tabs"
+    ]
 }

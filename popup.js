@@ -8,434 +8,438 @@ let communicationSuccess = false;
 
 
 function init() {
-  if (isPrivacyPolicyAccepted()) {
-    hidePrivacyPolicy();
-    openKiteIfNotOpen();
+    if (isPrivacyPolicyAccepted()) {
+        hidePrivacyPolicy();
+        openKiteIfNotOpen();
 
-    setTimeout(_ => {
-      sendMessage({ task: 'LATEST_UPDATE' })
-      setInterval(_ => {
+        setTimeout(_ => {
+            sendMessage({ task: 'LATEST_UPDATE' })
+            setInterval(_ => {
+                sendMessage({ task: 'LATEST_UPDATE' })
+            }, 30 * 1000)
+        }, 3000)
+
+        setTimeout(_ => {
+            if (!communicationSuccess) {
+                document.querySelector('#reopenKiteRow').style.visibility = 'unset';
+            }
+        }, 6500)
+
         sendMessage({ task: 'LATEST_UPDATE' })
-      }, 30 * 1000)
-    }, 3000)
 
-    setTimeout(_ => {
-      if (!communicationSuccess) {
-        document.querySelector('#reopenKiteRow').style.visibility = 'unset';
-      }
-    }, 6500)
+        initializeListeners();
+    }
 
-    sendMessage({ task: 'LATEST_UPDATE' })
-
-    initializeListeners();
-  }
-
-  //getAnalyticsAndUpdateTable();
+    //getAnalyticsAndUpdateTable();
 }
 
 function openCleanKiteTab() {
 
-  return new Promise((resolve, reject) => {
-    chrome.tabs.query({}, tabs => {
-      let index = tabs.findIndex((tab) => { return tab.url.includes('https://kite') });
-      if (index != -1) {
-        chrome.tabs.remove(tabs[index].id, function () {
-          return setTimeout(_ => {
-            return openKiteIfNotOpen()
-              .then(resolve)
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({}, tabs => {
+            let index = tabs.findIndex((tab) => { return tab.url.includes('https://kite') });
+            if (index != -1) {
+                chrome.tabs.remove(tabs[index].id, function() {
+                    return setTimeout(_ => {
+                        return openKiteIfNotOpen()
+                            .then(resolve)
 
-          }, 200)
+                    }, 200)
+
+                });
+            } else {
+                return openKiteIfNotOpen()
+                    .then(resolve)
+            }
 
         });
-      } else {
-        return openKiteIfNotOpen()
-          .then(resolve)
-      }
-
-    });
-  })
+    })
 
 
 }
 
 function initializeListeners() {
-  document.querySelectorAll('.tabHeaderButton').forEach(btn => {
-    btn.addEventListener('click', changeTab)
-  })
-
-  let openKiteBtn = document.querySelector('#openKiteBtn');
-  openKiteBtn.addEventListener('click', () => {
-    highlightKiteTab(true);
-  })
-
-  let sortBtnLooser = document.querySelector('#sortBtnLooser');
-  sortBtnLooser.addEventListener('click', () => {
-    sortInstruments('LOOSER')
-  })
-
-  let sortBtnGainer = document.querySelector('#sortBtnGainer');
-  sortBtnGainer.addEventListener('click', () => {
-    sortInstruments('GAINER')
-  });
-
-
-  let watchListTableFilerPreviouslySelected = localStorage.getItem('watchListTableFiler');
-  let tableFiler = document.querySelector('#tableFiler');
-  tableFiler.addEventListener('change', (evt) => {
-    localStorage.setItem('watchListTableFiler',evt.target.value )
-    updateWatchListTable();
-  })
-  if (watchListTableFilerPreviouslySelected != undefined) {
-    tableFiler.value = watchListTableFilerPreviouslySelected;
-  }
-
-
-  let investmentTableFilerPreviouslySelected = localStorage.getItem('investmentTableFiler');
-  let investmentTableFiler = document.querySelector('#investmentTableFiler');
-  investmentTableFiler.addEventListener('change', (evt) => {
-    localStorage.setItem('investmentTableFiler',evt.target.value )
-    populateInvestmentTable();
-  })
-  if (investmentTableFilerPreviouslySelected != undefined) {
-    investmentTableFiler.value = investmentTableFilerPreviouslySelected;
-  }
-
-
-  let closeAndReopenKiteBTn = document.querySelector('#closeAndReopenKiteBTn');
-  closeAndReopenKiteBTn.addEventListener('click', () => {
-    openCleanKiteTab().then(_ => {
-      init();
+    document.querySelectorAll('.tabHeaderButton').forEach(btn => {
+        btn.addEventListener('click', changeTab)
     })
-  });
+
+    let openKiteBtn = document.querySelector('#openKiteBtn');
+    openKiteBtn.addEventListener('click', () => {
+        highlightKiteTab(true);
+    })
+
+    let sortBtnLooser = document.querySelector('#sortBtnLooser');
+    sortBtnLooser.addEventListener('click', () => {
+        sortInstruments('LOOSER')
+    })
+
+    let sortBtnGainer = document.querySelector('#sortBtnGainer');
+    sortBtnGainer.addEventListener('click', () => {
+        sortInstruments('GAINER')
+    });
+
+
+    let watchListTableFilerPreviouslySelected = localStorage.getItem('watchListTableFiler');
+    let tableFiler = document.querySelector('#tableFiler');
+    tableFiler.addEventListener('change', (evt) => {
+        localStorage.setItem('watchListTableFiler', evt.target.value)
+        updateWatchListTable();
+    })
+    if (watchListTableFilerPreviouslySelected != undefined) {
+        tableFiler.value = watchListTableFilerPreviouslySelected;
+    }
+
+
+    let investmentTableFilerPreviouslySelected = localStorage.getItem('investmentTableFiler');
+    let investmentTableFiler = document.querySelector('#investmentTableFiler');
+    investmentTableFiler.addEventListener('change', (evt) => {
+        localStorage.setItem('investmentTableFiler', evt.target.value)
+        populateInvestmentTable();
+    })
+    if (investmentTableFilerPreviouslySelected != undefined) {
+        investmentTableFiler.value = investmentTableFilerPreviouslySelected;
+    }
+
+
+    let closeAndReopenKiteBTn = document.querySelector('#closeAndReopenKiteBTn');
+    closeAndReopenKiteBTn.addEventListener('click', () => {
+        openCleanKiteTab().then(_ => {
+            init();
+        })
+    });
 
 
 }
 
 function isPrivacyPolicyAccepted() {
-  try {
-    let policy = localStorage.getItem("privacy_policy");
-    if (policy && policy.trim().toLowerCase() == 'accepted') {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    console.error(e);
-    return false;
+    try {
+        let policy = localStorage.getItem("privacy_policy");
+        if (policy && policy.trim().toLowerCase() == 'accepted') {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.error(e);
+        return false;
 
-  }
+    }
 
 }
 
 function hidePrivacyPolicy() {
-  document.querySelector('.license').style.display = 'none'
+    document.querySelector('.license').style.display = 'none'
 }
 
 function changeTab(event) {
 
-  let btn = event.target;
-  if (btn.dataset.body) {
-    document.querySelectorAll('.tabHeaderButton').forEach(btn => btn.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tabBody').forEach(tab => tab.style.display = 'none')
-    document.querySelector(`#${event.target.dataset.body}`).style.display = 'block'
-  }
+    let btn = event.target;
+    if (btn.dataset.body) {
+        document.querySelectorAll('.tabHeaderButton').forEach(btn => btn.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tabBody').forEach(tab => tab.style.display = 'none')
+        document.querySelector(`#${event.target.dataset.body}`).style.display = 'block'
+    }
 
-  if (btn.dataset.listener) {
-    window[btn.dataset.listener].call();
-  }
+    if (btn.dataset.listener) {
+        window[btn.dataset.listener].call();
+    }
 
 }
 
 function generateNews() {
-  News.updateView();
+    News.updateView();
 }
 
-function renderStocks(){
-  News.renderStocks();
+function renderStocks() {
+    News.renderStocks();
 }
 
 function openKiteIfNotOpen() {
-  return new Promise((resolve, reject) => {
-    chrome.tabs.query({}, tabs => {
-      let found = tabs.some((tab) => { return tab.url.includes('https://kite') });
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({}, tabs => {
+            let found = tabs.some((tab) => { return tab.url.includes('https://kite') });
 
-      if (!found) {
-        chrome.tabs.create({ url: 'https://kite.zerodha.com/', selected: false }, _ => {
-          setTimeout(_ => {
-            resolve();
-          }, 500)
+            if (!found) {
+                chrome.tabs.create({ url: 'https://kite.zerodha.com/', selected: false }, _ => {
+                    setTimeout(_ => {
+                        resolve();
+                    }, 500)
 
+                });
+            } else {
+                resolve()
+            }
         });
-      } else {
-        resolve()
-      }
-    });
-  })
+    })
 
 }
 
 
 
 function highlightKiteTab(force = false) {
-  chrome.tabs.query({}, tabs => {
+    chrome.tabs.query({}, tabs => {
 
-    let found = tabs.filter((tab) => {
-      let url = tab.url || tab.pendingUrl || '';
-      return (url.includes('https://kite') || url.includes('https://kite'))
+        let found = tabs.filter((tab) => {
+            let url = tab.url || tab.pendingUrl || '';
+            return (url.includes('https://kite') || url.includes('https://kite'))
 
-    });
-    if (found.length > 0 && (!found[0].active || force)) {
-      chrome.tabs.get(found[0].id, function (tab) {
-        chrome.tabs.highlight({ 'tabs': tab.index }, function () { });
-      });
-    }
+        });
+        if (found.length > 0 && (!found[0].active || force)) {
+            chrome.tabs.get(found[0].id, function(tab) {
+                chrome.tabs.highlight({ 'tabs': tab.index }, function() {});
+            });
+        }
 
-  })
+    })
 }
 
 function sortInstruments(by) {
-  sendMessage({ task: 'SORT_INSTRUMENTS', by })
-  highlightKiteTab(true);
+    sendMessage({ task: 'SORT_INSTRUMENTS', by })
+    highlightKiteTab(true);
 }
 
 function displayLog(log) {
-  sendMessage({ task: 'DISPLAY_LOG', log })
+    sendMessage({ task: 'DISPLAY_LOG', log })
 }
 
 chrome.runtime.onMessage.addListener(msg => {
-  taskDispatcher(msg)
-  communicationSuccess = true;
+    taskDispatcher(msg)
+    communicationSuccess = true;
 });
 
 function taskDispatcher(msg) {
-  switch (msg.task) {
-    case 'WATCH_LIST_UPDATE':
-      watchList = msg.watchList;
-      //updateDbForAnalytics()
-      updateWatchListTable();
-      break;
+    switch (msg.task) {
+        case 'WATCH_LIST_UPDATE':
+            watchList = msg.watchList;
+            //updateDbForAnalytics()
+            updateWatchListTable();
+            break;
 
-    case 'USER_NOT_LOGGED_IN':
-      highlightKiteTab();
-      break;
+        case 'USER_NOT_LOGGED_IN':
+            highlightKiteTab();
+            break;
 
-    case 'FUND_UPDATE':
-      let profitParent = document.querySelector('#profitParent');
+        case 'FUND_UPDATE':
+            let profitParent = document.querySelector('#profitParent');
 
-      if (msg.data.profit > 0) {
-        profitParent.classList.remove('warn');
-        profitParent.classList.add('good');
-      } else {
-        profitParent.classList.remove('good');
-        profitParent.classList.add('warn');
-      }
-      profitParent.querySelector('#profit').innerHTML = `${Math.abs(msg.data.profit)}`;
-      let profitLabel = msg.data.profit < 0 ? 'loss' : 'profit';
-      totalProfit = msg.data.profit;
-      let per = Math.floor(((((Math.abs(totalProfit)) / msg.data.invested) * 10000))) / 100;
+            if (msg.data.profit > 0) {
+                profitParent.classList.remove('warn');
+                profitParent.classList.add('good');
+            } else {
+                profitParent.classList.remove('good');
+                profitParent.classList.add('warn');
+            }
+            profitParent.querySelector('#profit').innerHTML = `${Math.abs(msg.data.profit)}`;
+            let profitLabel = msg.data.profit < 0 ? 'loss' : 'profit';
+            totalProfit = msg.data.profit;
+            let per = Math.floor(((((Math.abs(totalProfit)) / msg.data.invested) * 10000))) / 100;
 
-      profitParent.querySelector('#profitLabel').innerHTML = `${profitLabel} <span >${per}%</span>`;
+            if (isNaN(per)) {
+                per = 0;
+            }
+            profitParent.querySelector('#profitLabel').innerHTML = `${profitLabel} <span >${per}%</span>`;
 
-      totalInvested = Math.floor((msg.data.invested) * 100) / 100;
-      document.querySelector('#invested').innerHTML = `${totalInvested}`;
-      document.querySelector('#investedLabel').innerHTML = `invested`;
-      updateInvestments(msg.data.positions, msg.data.holdings)
+            totalInvested = Math.floor((msg.data.invested) * 100) / 100;
+            document.querySelector('#invested').innerHTML = `${totalInvested}`;
+            document.querySelector('#investedLabel').innerHTML = `invested`;
+            updateInvestments(msg.data.positions, msg.data.holdings)
 
-      //let tempx = totalAvailableFund + totalProfit + totalInvested
-     // document.querySelector('#totalAsset').innerHTML = `${Math.floor(tempx * 100) / 100}`;
-      //document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `;
+            //let tempx = totalAvailableFund + totalProfit + totalInvested
+            // document.querySelector('#totalAsset').innerHTML = `${Math.floor(tempx * 100) / 100}`;
+            //document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `;
 
-      break;
-
-
-    case 'CASH_UPDATE':
-      totalAvailableFund = Math.floor((msg.data.net) * 100) / 100
-
-      document.querySelector('#available').innerHTML = `${totalAvailableFund}`;
-      document.querySelector('#availableLabel').innerHTML = `available cash`;
+            break;
 
 
-/*       let temp = totalAvailableFund + totalProfit + totalInvested
-      document.querySelector('#totalAsset').innerHTML = `${Math.floor(temp * 100) / 100}`;
-      document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `; */
-      break;
-  }
+        case 'CASH_UPDATE':
+            totalAvailableFund = Math.floor((msg.data.net) * 100) / 100
+
+            document.querySelector('#available').innerHTML = `${totalAvailableFund}`;
+            document.querySelector('#availableLabel').innerHTML = `available cash`;
+
+
+            /*       let temp = totalAvailableFund + totalProfit + totalInvested
+                  document.querySelector('#totalAsset').innerHTML = `${Math.floor(temp * 100) / 100}`;
+                  document.querySelector('#totalAssetLabel').innerHTML = `Available + Invested + Profit `; */
+            break;
+    }
 }
 allInvestments = [];
+
 function updateInvestments(positions, holdings) {
 
-  allInvestments = [...positions, ...holdings];
-  allInvestments = allInvestments.map(eachInvestment => {
-    eachInvestment.totalInvested = eachInvestment.quantity * eachInvestment.buyPrice
-    eachInvestment.totalCurrentValue = eachInvestment.quantity * eachInvestment.currentPrice
-    eachInvestment.profit = eachInvestment.totalCurrentValue - eachInvestment.totalInvested;
-    eachInvestment.deepLinkHref = `https://kite.zerodha.com/chart/web/ciq/${eachInvestment.exchange}/${eachInvestment.name}/${eachInvestment.instrumentToken}`;
-    eachInvestment.profitPerc = (((eachInvestment.profit) / eachInvestment.totalInvested) * 100);
-    return eachInvestment;
-  })
+    allInvestments = [...positions, ...holdings];
+    allInvestments = allInvestments.map(eachInvestment => {
+        eachInvestment.totalInvested = eachInvestment.quantity * eachInvestment.buyPrice
+        eachInvestment.totalCurrentValue = eachInvestment.quantity * eachInvestment.currentPrice
+        eachInvestment.profit = eachInvestment.totalCurrentValue - eachInvestment.totalInvested;
+        eachInvestment.deepLinkHref = `https://kite.zerodha.com/chart/web/ciq/${eachInvestment.exchange}/${eachInvestment.name}/${eachInvestment.instrumentToken}`;
+        eachInvestment.profitPerc = (((eachInvestment.profit) / eachInvestment.totalInvested) * 100);
+        return eachInvestment;
+    })
 
-  populateInvestmentTable();
+    populateInvestmentTable();
 
 
 }
 
 function populateInvestmentTable() {
 
-  let investmentsTbody = document.querySelector('#investmentsTbody')
-  investmentsTbody.innerHTML = '';
+    let investmentsTbody = document.querySelector('#investmentsTbody')
+    investmentsTbody.innerHTML = '';
 
-  let userSelection = document.querySelector('#investmentTableFiler').value;
-  let filteredInvestment = []
-  switch (userSelection) {
-    case 'ALL':
-      filteredInvestment = [...allInvestments];
-      break;
-    case 'SORTBYINVESTMENT':
-      filteredInvestment = [...allInvestments].sort((b, a) => a.totalInvested - b.totalInvested)
-      break;
-    case 'SORTBYPROFIT':
-      filteredInvestment = [...allInvestments].sort((b, a) => a.profit - b.profit)
-      break;
-    case 'SORTBYPROFITPERC':
-      filteredInvestment = [...allInvestments].sort((b, a) => a.profitPerc - b.profitPerc)
-      break;
+    let userSelection = document.querySelector('#investmentTableFiler').value;
+    let filteredInvestment = []
+    switch (userSelection) {
+        case 'ALL':
+            filteredInvestment = [...allInvestments];
+            break;
+        case 'SORTBYINVESTMENT':
+            filteredInvestment = [...allInvestments].sort((b, a) => a.totalInvested - b.totalInvested)
+            break;
+        case 'SORTBYPROFIT':
+            filteredInvestment = [...allInvestments].sort((b, a) => a.profit - b.profit)
+            break;
+        case 'SORTBYPROFITPERC':
+            filteredInvestment = [...allInvestments].sort((b, a) => a.profitPerc - b.profitPerc)
+            break;
 
-    case 'ONLYPROFIT':
-      filteredInvestment = [...allInvestments].filter((a) => a.profit >= 0)
-      break;
-    case 'ONLYLOSS':
-      filteredInvestment = [...allInvestments].filter((a) => a.profit < 0)
-      break;
+        case 'ONLYPROFIT':
+            filteredInvestment = [...allInvestments].filter((a) => a.profit >= 0)
+            break;
+        case 'ONLYLOSS':
+            filteredInvestment = [...allInvestments].filter((a) => a.profit < 0)
+            break;
 
-    default:
-      filteredInvestment = [...allInvestments];
-      break;
-  }
-
-  let filtered=allInvestments.length-filteredInvestment.length;
-  if(filtered>0){
-    document.querySelector('.hiddenWarning').innerHTML=`${filtered} hidden`;
-  }else{
-    document.querySelector('.hiddenWarning').innerHTML='';
-  }
-  
-
-  let allInvestment = 0;
-  let allProfit = 0;
-
-  for (let i = 0; i < filteredInvestment.length; i++) {
-    let eachInvestment = filteredInvestment[i];
-
-    let row = document.createElement('tr');
-
-
-    let td2 = document.createElement('td');
-    td2.innerHTML = `<a class="deepLInk"  target="_blank" href="${eachInvestment.deepLinkHref}" >
-    ${eachInvestment.name}</a>`
-    row.appendChild(td2);
-
-
-
-    let td3 = document.createElement('td');
-    td3.innerHTML = eachInvestment.quantity
-    row.appendChild(td3);
-
-    let td8 = document.createElement('td');
-    let buyPrice = Math.floor((eachInvestment.buyPrice) * 100) / 100
-    td8.innerHTML = buyPrice
-    row.appendChild(td8);
-
-    let td9 = document.createElement('td');
-    let currentPrice = eachInvestment.currentPrice;
-    td9.innerHTML = `${Math.floor((eachInvestment.currentPrice) * 100) / 100}`
-    row.appendChild(td9);
-
-
-    allInvestment += eachInvestment.totalInvested;
-    let td4 = document.createElement('td');
-    td4.classList.add('highlight')
-    td4.innerHTML = `${Math.floor((eachInvestment.totalInvested) * 100) / 100}`
-    row.appendChild(td4);
-
-
-    allProfit += eachInvestment.profit;
-
-    let td5 = document.createElement('td');
-    td5.classList.add('highlight')
-    td5.innerHTML = `${Math.floor((eachInvestment.profit) * 100) / 100}`
-    row.appendChild(td5);
-
-
-
-    if (eachInvestment.profitPerc < 0) {
-      row.classList.add('warn')
-    } else {
-      row.classList.add('good')
+        default:
+            filteredInvestment = [...allInvestments];
+            break;
     }
 
-    let td6 = document.createElement('td');
-    td6.classList.add('highlight')
-    if (eachInvestment.profitPerc < 0) {
-      td6.innerHTML = `<div class="dataWithLabel">
+    let filtered = allInvestments.length - filteredInvestment.length;
+    if (filtered > 0) {
+        document.querySelector('.hiddenWarning').innerHTML = `${filtered} hidden`;
+    } else {
+        document.querySelector('.hiddenWarning').innerHTML = '';
+    }
+
+
+    let allInvestment = 0;
+    let allProfit = 0;
+
+    for (let i = 0; i < filteredInvestment.length; i++) {
+        let eachInvestment = filteredInvestment[i];
+
+        let row = document.createElement('tr');
+
+
+        let td2 = document.createElement('td');
+        td2.innerHTML = `<a class="deepLInk"  target="_blank" href="${eachInvestment.deepLinkHref}" >
+    ${eachInvestment.name}</a>`
+        row.appendChild(td2);
+
+
+
+        let td3 = document.createElement('td');
+        td3.innerHTML = eachInvestment.quantity
+        row.appendChild(td3);
+
+        let td8 = document.createElement('td');
+        let buyPrice = Math.floor((eachInvestment.buyPrice) * 100) / 100
+        td8.innerHTML = buyPrice
+        row.appendChild(td8);
+
+        let td9 = document.createElement('td');
+        let currentPrice = eachInvestment.currentPrice;
+        td9.innerHTML = `${Math.floor((eachInvestment.currentPrice) * 100) / 100}`
+        row.appendChild(td9);
+
+
+        allInvestment += eachInvestment.totalInvested;
+        let td4 = document.createElement('td');
+        td4.classList.add('highlight')
+        td4.innerHTML = `${Math.floor((eachInvestment.totalInvested) * 100) / 100}`
+        row.appendChild(td4);
+
+
+        allProfit += eachInvestment.profit;
+
+        let td5 = document.createElement('td');
+        td5.classList.add('highlight')
+        td5.innerHTML = `${Math.floor((eachInvestment.profit) * 100) / 100}`
+        row.appendChild(td5);
+
+
+
+        if (eachInvestment.profitPerc < 0) {
+            row.classList.add('warn')
+        } else {
+            row.classList.add('good')
+        }
+
+        let td6 = document.createElement('td');
+        td6.classList.add('highlight')
+        if (eachInvestment.profitPerc < 0) {
+            td6.innerHTML = `<div class="dataWithLabel">
       <span>${Math.floor((eachInvestment.profitPerc) * 100) / 100} %</span>
       <span><a target="_blank" href="https://pranoysarkar.github.io/kiteman/#/loss-recovery-calculator?units=${eachInvestment.quantity}&buy=${buyPrice}&cprice=${currentPrice}">recover loss</a></span>
       </div>
       `
-    } else {
-      td6.innerHTML = `<div class="dataWithLabel">
+        } else {
+            td6.innerHTML = `<div class="dataWithLabel">
       <span>${Math.floor((eachInvestment.profitPerc) * 100) / 100} %</span>
       </div>`
+        }
+
+        row.appendChild(td6);
+
+        let research = document.createElement('td');
+        let instrumentName = encodeURIComponent(eachInvestment.name);
+        research.innerHTML = generateLinks(instrumentName)
+        row.appendChild(research);
+
+        investmentsTbody.appendChild(row)
     }
-
-    row.appendChild(td6);
-
-    let research = document.createElement('td');
-    let instrumentName = encodeURIComponent(eachInvestment.name);
-    research.innerHTML = generateLinks(instrumentName)
-    row.appendChild(research);
-
-    investmentsTbody.appendChild(row)
-  }
-  let finalRow = document.createElement('tr');
-  finalRow.classList.add('finalRow');
+    let finalRow = document.createElement('tr');
+    finalRow.classList.add('finalRow');
 
 
 
-  let totalTd = document.createElement('td');
-  totalTd.innerHTML = 'Total';
-  totalTd.setAttribute('colspan', '4')
-  finalRow.appendChild(totalTd)
+    let totalTd = document.createElement('td');
+    totalTd.innerHTML = 'Total';
+    totalTd.setAttribute('colspan', '4')
+    finalRow.appendChild(totalTd)
 
-  if (allInvestment > 0) {
-    let allInvestmentTd = document.createElement('td');
-    allInvestmentTd.innerHTML = Math.floor(allInvestment * 100) / 100;;
-    finalRow.appendChild(allInvestmentTd)
+    if (allInvestment > 0) {
+        let allInvestmentTd = document.createElement('td');
+        allInvestmentTd.innerHTML = Math.floor(allInvestment * 100) / 100;;
+        finalRow.appendChild(allInvestmentTd)
 
-    let allProfitTd = document.createElement('td');
-    allProfitTd.innerHTML = Math.floor(allProfit * 100) / 100;
-    finalRow.appendChild(allProfitTd)
+        let allProfitTd = document.createElement('td');
+        allProfitTd.innerHTML = Math.floor(allProfit * 100) / 100;
+        finalRow.appendChild(allProfitTd)
 
-    if (allProfit < 0) {
-      finalRow.classList.add('warn')
-    } else {
-      finalRow.classList.add('good')
+        if (allProfit < 0) {
+            finalRow.classList.add('warn')
+        } else {
+            finalRow.classList.add('good')
+        }
+
+        let totalPerc = document.createElement('td');
+        totalPerc.classList.add('highlight')
+        totalPerc.setAttribute('colspan', '2')
+        totalPerc.innerHTML = `${Math.floor((allProfit / allInvestment) * 100 * 100) / 100} %`;
+        finalRow.appendChild(totalPerc)
+
+        investmentsTbody.appendChild(finalRow)
     }
-
-    let totalPerc = document.createElement('td');
-    totalPerc.classList.add('highlight')
-    totalPerc.setAttribute('colspan', '2')
-    totalPerc.innerHTML = `${Math.floor((allProfit / allInvestment) * 100 * 100) / 100} %`;
-    finalRow.appendChild(totalPerc)
-
-    investmentsTbody.appendChild(finalRow)
-  }
 
 }
 
 
 function generateLinks(instrumentName) {
-  let links = `
+    let links = `
   <div class="researchLinksTd">
     <button class="researchLinkBtn">Links</button>
     <div class="popup">
@@ -449,7 +453,7 @@ function generateLinks(instrumentName) {
     </div>
   </div>
   `
-  return links.trim();
+    return links.trim();
 }
 /* function updateDbForAnalytics() {
   let currentTime = new Date().getTime()
@@ -477,209 +481,208 @@ function generateLinks(instrumentName) {
 } */
 function updateWatchListTable(condition = 'ALL') {
 
-  let watchListTbody = document.querySelector('#watchListTbody')
-  watchListTbody.innerHTML = '';
-  condition = document.querySelector('#tableFiler').value;
- 
+    let watchListTbody = document.querySelector('#watchListTbody')
+    watchListTbody.innerHTML = '';
+    condition = document.querySelector('#tableFiler').value;
 
-  let tempWatchList = [];
-  switch (condition) {
-    case 'ALL':
-      tempWatchList = [...watchList];
-      break;
-    case 'TOP2GAINERS&LOSERS':
-      tempWatchList = [watchList[0], watchList[watchList.length - 1]];
-      break;
-    case 'TOP5GAINERS':
-    case 'GAINERS':
 
-      tempWatchList = watchList.filter(each => {
-        if (each.displacement < 0) {
-          return false;
-        }
-        else {
-          return true;
-        }
-      })
-      if (condition == 'TOP5GAINERS') {
-        tempWatchList = tempWatchList.splice(0, 5);
-      }
+    let tempWatchList = [];
+    switch (condition) {
+        case 'ALL':
+            tempWatchList = [...watchList];
+            break;
+        case 'TOP2GAINERS&LOSERS':
+            tempWatchList = [watchList[0], watchList[watchList.length - 1]];
+            break;
+        case 'TOP5GAINERS':
+        case 'GAINERS':
 
-      break;
-    case 'TOP5LOSERS':
-    case 'LOSERS':
-      tempWatchList = watchList.filter(each => {
-        if (each.displacement >= 0) {
-          return false;
-        }
-        else {
-          return true;
-        }
-      })
-      tempWatchList = tempWatchList.reverse();
-      if (condition == 'TOP5LOSERS') {
-        tempWatchList = tempWatchList.splice(0, 5);
-      }
+            tempWatchList = watchList.filter(each => {
+                if (each.displacement < 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            })
+            if (condition == 'TOP5GAINERS') {
+                tempWatchList = tempWatchList.splice(0, 5);
+            }
 
-      break;
-    default:
-      tempWatchList = [...watchList];
-      break;
-  }
+            break;
+        case 'TOP5LOSERS':
+        case 'LOSERS':
+            tempWatchList = watchList.filter(each => {
+                if (each.displacement >= 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            })
+            tempWatchList = tempWatchList.reverse();
+            if (condition == 'TOP5LOSERS') {
+                tempWatchList = tempWatchList.splice(0, 5);
+            }
 
-  for (let i = 0; i < tempWatchList.length; i++) {
-    let eachInstrument = tempWatchList[i];
-
-    let row = document.createElement('tr');
-    if (eachInstrument.displacement < 0) {
-      row.classList.add('warn')
-    } else {
-      row.classList.add('good')
+            break;
+        default:
+            tempWatchList = [...watchList];
+            break;
     }
 
-    let td3 = document.createElement('td');
-    td3.innerHTML = `<a class="deepLInk"  target="_blank" 
+    for (let i = 0; i < tempWatchList.length; i++) {
+        let eachInstrument = tempWatchList[i];
+
+        let row = document.createElement('tr');
+        if (eachInstrument.displacement < 0) {
+            row.classList.add('warn')
+        } else {
+            row.classList.add('good')
+        }
+
+        let td3 = document.createElement('td');
+        td3.innerHTML = `<a class="deepLInk"  target="_blank" 
     href="https://kite.zerodha.com/chart/web/ciq/${eachInstrument.exchange}/${eachInstrument.name}/${eachInstrument.instrumentToken}" >
     ${eachInstrument.name}</a>`
-    row.appendChild(td3);
+        row.appendChild(td3);
 
-    let td2 = document.createElement('td');
-    td2.classList.add('highlight');
-    td2.innerHTML = eachInstrument.displacement + ' %'
-    row.appendChild(td2);
+        let td2 = document.createElement('td');
+        td2.classList.add('highlight');
+        td2.innerHTML = eachInstrument.displacement + ' %'
+        row.appendChild(td2);
 
 
-    let td = document.createElement('td');
-    let instrumentName = encodeURIComponent(eachInstrument.name);
-    td.innerHTML = generateLinks(instrumentName)
-    row.appendChild(td);
+        let td = document.createElement('td');
+        let instrumentName = encodeURIComponent(eachInstrument.name);
+        td.innerHTML = generateLinks(instrumentName)
+        row.appendChild(td);
 
-    watchListTbody.appendChild(row)
-  }
+        watchListTbody.appendChild(row)
+    }
 }
 
 function getAnalyticsAndUpdateTable(filter = 'all') {
 
-  Analytics.do().then(allInstruments => {
-    let analyticsTableBody = document.querySelector('#analyticsTableBody')
-    analyticsTableBody.innerHTML = '';
+    Analytics.do().then(allInstruments => {
+        let analyticsTableBody = document.querySelector('#analyticsTableBody')
+        analyticsTableBody.innerHTML = '';
 
-    if (allInstruments.length == 0) {
+        if (allInstruments.length == 0) {
 
-      let row = document.createElement('tr');
-      let dataNotPresent = document.createElement('td');
-      dataNotPresent.setAttribute('colspan', 5);
-      dataNotPresent.innerHTML = `Data not present`
-      row.appendChild(dataNotPresent);
-      analyticsTableBody.append(row)
-      return;
-    }
+            let row = document.createElement('tr');
+            let dataNotPresent = document.createElement('td');
+            dataNotPresent.setAttribute('colspan', 5);
+            dataNotPresent.innerHTML = `Data not present`
+            row.appendChild(dataNotPresent);
+            analyticsTableBody.append(row)
+            return;
+        }
 
-    switch (filter) {
-      case 'hockey_curve':
-        allInstruments = allInstruments.filter(x => x.analysis.hockey.status)
-        break;
-      case 'up':
-        allInstruments = allInstruments.filter(x => x.analysis.upHill.status)
-        break;
-      case 'down':
-        allInstruments = allInstruments.filter(x => x.analysis.downhill.status)
-        break;
-    }
+        switch (filter) {
+            case 'hockey_curve':
+                allInstruments = allInstruments.filter(x => x.analysis.hockey.status)
+                break;
+            case 'up':
+                allInstruments = allInstruments.filter(x => x.analysis.upHill.status)
+                break;
+            case 'down':
+                allInstruments = allInstruments.filter(x => x.analysis.downhill.status)
+                break;
+        }
 
-    allInstruments = allInstruments.filter((eachInstrument) => {
+        allInstruments = allInstruments.filter((eachInstrument) => {
 
-      return eachInstrument.analysis.hockey.status || eachInstrument.analysis.downhill.status || eachInstrument.analysis.upHill.status
-    })
-
-
-    let onlyHockey = allInstruments.filter(x => x.analysis.hockey.status != false)
-    allInstruments = allInstruments.filter(x => x.analysis.hockey.status == false)
-
-    allInstruments = allInstruments.sort((a, b) => {
-      return (b.analysis.downhill.status.toString().length - a.analysis.downhill.status.toString().length) || (b.analysis.upHill.status.toString().length - a.analysis.upHill.status.toString().length)
-    })
-
-    onlyHockey = onlyHockey.sort((b, a) => {
-      return (a.analysis.hockey.status.toString().length - b.analysis.hockey.status.toString().length)
-    })
+            return eachInstrument.analysis.hockey.status || eachInstrument.analysis.downhill.status || eachInstrument.analysis.upHill.status
+        })
 
 
-    allInstruments = [...onlyHockey, ...allInstruments]
+        let onlyHockey = allInstruments.filter(x => x.analysis.hockey.status != false)
+        allInstruments = allInstruments.filter(x => x.analysis.hockey.status == false)
 
-    if (allInstruments.length == 0) {
+        allInstruments = allInstruments.sort((a, b) => {
+            return (b.analysis.downhill.status.toString().length - a.analysis.downhill.status.toString().length) || (b.analysis.upHill.status.toString().length - a.analysis.upHill.status.toString().length)
+        })
 
-      let row = document.createElement('tr');
-      let dataNotPresent = document.createElement('td');
-      dataNotPresent.setAttribute('colspan', 5);
-      dataNotPresent.innerHTML = `Not enough data point.`
-      row.appendChild(dataNotPresent);
-      analyticsTableBody.append(row)
-    }
+        onlyHockey = onlyHockey.sort((b, a) => {
+            return (a.analysis.hockey.status.toString().length - b.analysis.hockey.status.toString().length)
+        })
 
-    for (let i = 0; i < allInstruments.length; i++) {
-      let eachInstrument = allInstruments[i];
 
-      let row = document.createElement('tr');
+        allInstruments = [...onlyHockey, ...allInstruments]
 
-      let td2 = document.createElement('td');
-      td2.innerHTML = `<a class="deepLInk"  target="_blank" 
+        if (allInstruments.length == 0) {
+
+            let row = document.createElement('tr');
+            let dataNotPresent = document.createElement('td');
+            dataNotPresent.setAttribute('colspan', 5);
+            dataNotPresent.innerHTML = `Not enough data point.`
+            row.appendChild(dataNotPresent);
+            analyticsTableBody.append(row)
+        }
+
+        for (let i = 0; i < allInstruments.length; i++) {
+            let eachInstrument = allInstruments[i];
+
+            let row = document.createElement('tr');
+
+            let td2 = document.createElement('td');
+            td2.innerHTML = `<a class="deepLInk"  target="_blank" 
       href="https://kite.zerodha.com/chart/web/ciq/${eachInstrument.exchange}/${eachInstrument.name}/${eachInstrument.instrumentToken}" >
       ${eachInstrument.name}</a>`
-      row.appendChild(td2);
+            row.appendChild(td2);
 
-      let td6 = document.createElement('td');
-      td6.classList.add('text-center')
-      td6.innerHTML = `${humanReadableStatus(eachInstrument.analysis.hockey.status)}`
-      row.appendChild(td6);
+            let td6 = document.createElement('td');
+            td6.classList.add('text-center')
+            td6.innerHTML = `${humanReadableStatus(eachInstrument.analysis.hockey.status)}`
+            row.appendChild(td6);
 
-      let td5 = document.createElement('td');
-      td5.classList.add('text-center')
-      td5.innerHTML = `${humanReadableStatus(eachInstrument.analysis.downhill.status)}`
-      row.appendChild(td5);
+            let td5 = document.createElement('td');
+            td5.classList.add('text-center')
+            td5.innerHTML = `${humanReadableStatus(eachInstrument.analysis.downhill.status)}`
+            row.appendChild(td5);
 
-      let upHillTd = document.createElement('td');
-      upHillTd.classList.add('text-center')
-      upHillTd.innerHTML = `${humanReadableStatus(eachInstrument.analysis.upHill.status)}`
-      row.appendChild(upHillTd);
+            let upHillTd = document.createElement('td');
+            upHillTd.classList.add('text-center')
+            upHillTd.innerHTML = `${humanReadableStatus(eachInstrument.analysis.upHill.status)}`
+            row.appendChild(upHillTd);
 
 
 
-      let linksTd = document.createElement('td');
-      let instrumentName = encodeURIComponent(eachInstrument.name);
-      linksTd.innerHTML = generateLinks(instrumentName)
-      row.appendChild(linksTd);
-      analyticsTableBody.appendChild(row)
-    }
-  })
+            let linksTd = document.createElement('td');
+            let instrumentName = encodeURIComponent(eachInstrument.name);
+            linksTd.innerHTML = generateLinks(instrumentName)
+            row.appendChild(linksTd);
+            analyticsTableBody.appendChild(row)
+        }
+    })
 
 }
 
 function humanReadableStatus(status) {
-  if (status == false) {
-    return '-';
-  }
-  if (status == true) {
-    return 'Good'
-  }
-  return status
+    if (status == false) {
+        return '-';
+    }
+    if (status == true) {
+        return 'Good'
+    }
+    return status
 }
+
 function sendMessage(msg) {
-  chrome.tabs.query({}, tabs => {
-    tabs.forEach(tab => {
-      chrome.tabs.sendMessage(tab.id, msg);
+    chrome.tabs.query({}, tabs => {
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, msg);
+        });
     });
-  });
 }
 
 
 
 window.addEventListener('load', _ => {
-  let privacyPolicyBtn = document.querySelector('#privacyPolicyBtn');
-  privacyPolicyBtn.addEventListener('click', () => {
-    localStorage.setItem("privacy_policy", "accepted");
+    let privacyPolicyBtn = document.querySelector('#privacyPolicyBtn');
+    privacyPolicyBtn.addEventListener('click', () => {
+        localStorage.setItem("privacy_policy", "accepted");
+        init();
+    });
     init();
-  });
-  init();
 
 });
